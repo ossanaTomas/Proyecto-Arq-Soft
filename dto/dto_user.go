@@ -11,8 +11,6 @@ type UserDto struct {
 	Role     string `json:"role"`
 	Id       int    `json:"id"`
 
-	Street string `json:"street_name"`
-	Number int    `json:"street_number"`
 }
 
 type UsersDto []UserDto

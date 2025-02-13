@@ -1,9 +1,9 @@
 package db
 
 import (
-	addressClient "mvc-go/clients/address"
-	telephoneClient "mvc-go/clients/telephone"
-	userClient "mvc-go/clients/user"
+	//addressClient "mvc-go/clients/address"
+	//telephoneClient "mvc-go/clients/telephone"
+	userClient "mvc-go/clients-DAO/user"
 				"mvc-go/model"
 				"github.com/jinzhu/gorm"
 				_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -42,8 +42,8 @@ func init() { // init() que se ejecuta durante la inicialización del paquete.
 	//Se asigna la conexión db a las variables Db de los clientes (userClient.Db, addressClient.Db, telephoneClient.Db).
 	//Esto permite que los clientes utilicen la conexión a la base de datos para realizar operaciones.
 	userClient.Db = db
-	addressClient.Db = db
-	telephoneClient.Db = db
+//	addressClient.Db = db
+//	telephoneClient.Db = db
 }
 
 func StartDbEngine() {

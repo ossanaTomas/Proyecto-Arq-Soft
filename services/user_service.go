@@ -1,12 +1,12 @@
 package services
 
 import (
-	addressCliente "mvc-go/clients/address"
-	telephoneCliente "mvc-go/clients/telephone"
+	//addressCliente "mvc-go/clients/address"
+	//telephoneCliente "mvc-go/clients/telephone"
 	userCliente "mvc-go/clients-DAO/user"
 
 	"mvc-go/dto" //contienelas estructuras de datos de transferencia de objetos (DTO)
-	// utilizadas para transferir información entre las capas de la aplicación.
+	         // utilizadas para transferir información entre las capas de la aplicación.
 	"mvc-go/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
 	e "mvc-go/utils/errors" //contiene el paquete errors
 	// , que proporciona funciones para manejar errores y devolver errores personalizados en forma de ApiError
@@ -57,17 +57,17 @@ func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) {
 	número del modelo al DTO. Estos DTO de teléfono se agregan al campo TelephonesDto de userDetailDto utilizando
 	la función append.*/
 
-	userDetailDto.Name = user.Name
-	userDetailDto.LastName = user.LastName
-	userDetailDto.Street =
+		userDetailDto.Name = user.Name
+		userDetailDto.LastName = user.LastName
+		
+		/*
 	for _, telephone := range user.Telephones {
 		var dtoTelephone dto.TelephoneDto
-
 		dtoTelephone.Code = telephone.Code
 		dtoTelephone.Number = telephone.Number
 
 		userDetailDto.TelephonesDto = append(userDetailDto.TelephonesDto, dtoTelephone)
-	}
+	} */
 
 	/* se itera sobre cada usuario en la lista users. Para cada usuario, se crea un dto.UserDto y
 	se copian los datos relevantes del modelo User al DTO. Esto incluye el nombre, apellido, nombre
@@ -90,34 +90,35 @@ func (s *userService) GetUsers() (dto.UsersDto, e.ApiError) {
 		var userDto dto.UserDto
 		userDto.Name = user.Name
 		userDto.LastName = user.LastName
-		userDto.UserName = user.Name
 		userDto.Id = user.Id
-
-		userDto.Street = user.Address.Street
-		userDto.Number = user.Address.Number
-
+		userDto.Role=user.Role
+		//userDto.Street = users.Address.Street
+		//userDto.Number = users.Address.Number
+		
 		usersDto = append(usersDto, userDto)
+		//agrega un nuevo elemento a la lista userDto
 	}
 
 	return usersDto, nil
 }
 
+
 func (s *userService) InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) {
 
 	var user model.User
 
-	var address model.Address
+	//var address model.Address
 
 	user.Name = userDto.Name
 	user.LastName = userDto.LastName
 	user.UserName = userDto.UserName
 	user.Password = userDto.Password
 
-	address.Number = userDto.Number
-	address.Street = userDto.Street
-	address = addressCliente.InsertAddress(address)
+	//address.Number = userDto.Number
+	//address.Street = userDto.Street
+	//address = addressCliente.InsertAddress(address)
 
-	user.Address = address
+//	user.Address = address
 	user = userCliente.InsertUser(user)
 
 	userDto.Id = user.Id
@@ -133,7 +134,7 @@ func (s *userService) AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserD
 	telephone.Number = telephoneDto.Number
 	telephone.UserId = telephoneDto.UserId
 	//Adding
-	telephone = telephoneCliente.AddTelephone(telephone)
+	//telephone = telephoneCliente.AddTelephone(telephone)
 
 	// Find User
 	var user model.User = userCliente.GetUserById(telephoneDto.UserId)
@@ -141,6 +142,10 @@ func (s *userService) AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserD
 
 	userDetailDto.Name = user.Name
 	userDetailDto.LastName = user.LastName
+
+	return userDetailDto, nil   // agregado para que funcione
+}
+	/*
 	userDetailDto.Street = user.Address.Street
 	userDetailDto.Number = user.Address.Number
 	for _, telephone := range user.Telephones {
@@ -153,6 +158,6 @@ func (s *userService) AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserD
 	}
 
 	return userDetailDto, nil
-}
+}*/
 
 //visitar addressCliente, telephoneCliente y userCliente

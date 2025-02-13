@@ -33,12 +33,11 @@ func GetUserById(c *gin.Context) { //esta es la declaración de una función lla
 	// donde "nombreParametro" es el nombre del parámetro definido en la ruta de la API.
 
   //*gin.context es una estructura que cuenta con el contenido-contexto de una estructura HTTP. 
-
 	log.Debug("User id to load: " + c.Param("id")) //Esta línea registra un mensaje de depuración utilizando
 	// el paquete de registro log. El mensaje muestra el ID del
 	//usuario que se cargará, obtenido del parámetro "id" en el
 	//contexto de Gin.
-
+	
 	id, _ := strconv.Atoi(c.Param("id")) //Esta línea convierte el parámetro "id" en el contexto de Gin en un entero
 	var userDto dto.UserDetailDto        //Se declara una variable userDto de tipo dto.UserDetailDto
 
@@ -62,8 +61,8 @@ func GetUsers(c *gin.Context) { //Esta función manejará una solicitud HTTP par
 	 //Se llama a la función GetUsers del servicio UserService
 	// La función GetUsers del servicio se encarga de obtener la
 	//lista de usuarios y devuelve los datos en forma de dto.UsersDto
-
-	userDto, err := service.UserService.GetUsers()
+	
+	usersDto, err := service.UserService.GetUsers()
 
 	if err != nil {
 		c.JSON(err.Status(), err)

@@ -6,6 +6,7 @@ type User struct { //se define la estructura user que representaun modelo de dat
 	LastName string `gorm:"type:varchar(250);not null"`
 	UserName string `gorm:"type:varchar(150);not null;unique"`
 	Password string `gorm:"type:varchar(150);not null"`
+	Email    string `gorm:"type:varchar(255);not null;unique"`
 	Role     string `gorm:"type:enum('user', 'admin') DEFAULT 'user'(150);not null"`
 	//Address Address `gorm:"foreignkey:AddressId"` //La etiqueta gorm:"foreignkey:AddressId" indica que la clave
 	// externa AddressId en la tabla de usuarios está relacionada con la clave primaria Id de la tabla de direcciones.
