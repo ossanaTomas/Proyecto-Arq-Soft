@@ -6,3 +6,4 @@ type Ameniti struct {
 	Description string  `gorm:"type:varchar(1000);not null"`
 	Hotels      []Hotel `gorm:"many2many:hotel_ameniti;"` // Relación muchos a muchos
 }
+	

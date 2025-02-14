@@ -1,5 +1,5 @@
-package telephone
-
+ package telephone
+/*
 import (
 	"mvc-go/model"
 
@@ -18,4 +18,5 @@ func AddTelephone(telephone model.Telephone) model.Telephone {
 	}
 	log.Debug("Telephone Created: ", telephone.Id)
 	return telephone
-}
+}  */
+  

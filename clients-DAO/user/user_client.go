@@ -1,9 +1,11 @@
 package product
 
 import (
+	"errors"
 	"mvc-go/model" //importo del model
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 var Db *gorm.DB
@@ -32,15 +34,45 @@ func GetUsers() model.Users { // no recibe paremetros y devuleveuna coleccion de
 	return users
 }
 
-func InsertUser(user model.User) model.User { //recibeun objeto model.user y devuelve un usuario insertado.
+
+func InsertUser(user model.User) (model.User, error) { //recibe un objeto model.user y devuelve un usuario insertado.
 	result := Db.Create(&user)
 
 	if result.Error != nil {
-		//TODO Manage Errors
-		log.Error("")
+		// si el mensaje de error contiene duplicate entry:
+		if strings.Contains(result.Error.Error(), "Duplicate entry") {
+			//es por que una de las llaves ya existe
+            log.Error("Usuario o Email Ya existentes")
+        return model.User{}, errors.New("usuario o email ya existentes")
+		}
+		//si el error no es por duplicado
+		log.Error("Error al crear el usuario:", result.Error)
+        return model.User{}, result.Error
 	}
+
 	log.Debug("User Created: ", user.Id)
-	return user
+	return user, nil
 }
 
-//ir a model/user.go
+// Aca agrego una breve explicacion de como realizar las operaciones CRUD con GORM
+//-insertar datos: 
+//Para insertar un nuevo dato se utiliza el metodo create(), donde recibe como parametro 
+// un puntero a la estructura que se necesite.GORM gestiona automaticamente 
+//-Leer datos:
+//Se tiene tres sentencias, FIND, FiRST y Where
+//Find:obtiene todos los registros de una tabla 
+//First: Obtiene el primer registro que coincide con la consulta.
+//Where: Permite realizar consultas más específicas con condiciones.
+//-Actualizar Datos :
+//Save: Actualiza el registro en la base de datos si ya existe (basado en la clave primaria).
+//Updates: Permite actualizar solo los campos que cambian
+//Borrar datos: 
+//Db.Delete(&user, id): Elimina el registro de la tabla User donde el ID coincida con id.	
+
+// el uso de PRELOAD en ciertas consultas se utiliza para cargar relaciones de manera anticipada 
+// util cuando se necesita obtener datos relacionados en una sola consulta, en lugar de hacer consultas 
+// adicionales posteriormente 
+// Con preload GORM ejecutara algo como lo siguiente: 
+//SELECT * FROM users WHERE id = ?;  -- Obtiene el usuario
+//SELECT * FROM addresses WHERE user_id = ?;  -- Carga la dirección del usuario
+//SELECT * FROM telephones WHERE user_id = ?;  -- Carga los teléfonos del usuario

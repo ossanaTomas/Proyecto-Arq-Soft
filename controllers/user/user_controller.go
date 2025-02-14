@@ -72,11 +72,8 @@ func GetUsers(c *gin.Context) { //Esta función manejará una solicitud HTTP par
 	c.JSON(http.StatusOK, usersDto)
 }
 
-func UserInsert(c *gin.Context) { //Esta función manejará una solicitud HTTP para insertar un nuevo usuario.
-	// realiza como un post
-	var userDto dto.UserDto // Se declara una variable userDto de tipo dto.UserDto.
-	// Esta variable se utilizará para almacenar los datos del
-	//nuevo usuario que se recibirá en la solicitud.
+func UserInsert(c *gin.Context) { 
+	var userDto dto.UserDto 
 
 	err := c.BindJSON(&userDto) //BindJSON es un método de c que se utiliza para vincular los datos
 	// JSON recibidos en la solicitud a una estructura de datos en Go.
@@ -86,7 +83,6 @@ func UserInsert(c *gin.Context) { //Esta función manejará una solicitud HTTP p
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
-
 		//Se verifica si hay un error en la conversión del JSON.
 		//Si hay un error, se registra un mensaje de error utilizando el paquete de
 		//registro log y se devuelve una respuesta JSON con un código de estado HTTP 400 (Bad Request)
@@ -94,12 +90,9 @@ func UserInsert(c *gin.Context) { //Esta función manejará una solicitud HTTP p
 	}
 
 	userDto, er := service.UserService.InsertUser(userDto)
-
 	//Se llama a la función InsertUser del servicio UserService para insertar el
-	//nuevo usuario en la base de datos. Se pasa la variable userDto como argumento
-	//y el resultado se asigna a las variables userDto y er. La función InsertUser
+	//nuevo usuario en la base de datos. El resultado se asigna a las variables userDto y er. La función InsertUser
 	//devuelve los datos del usuario insertado y un posible error.
-
 	if er != nil {
 		c.JSON(er.Status(), er)
 		return
@@ -109,6 +102,8 @@ func UserInsert(c *gin.Context) { //Esta función manejará una solicitud HTTP p
 	// con un código de estado HTTP 201 (Created) y los datos del usuario insertado.
 }
 
+
+/*
 func AddUserTelephone(c *gin.Context) { //meneja una solicitud de post para agregar
 	// un nuemero de telefono a un usuario existente
 
@@ -137,7 +132,7 @@ func AddUserTelephone(c *gin.Context) { //meneja una solicitud de post para agre
 
 	c.JSON(http.StatusCreated, userDto)
 }
-
+*/
 /*En general, estos controladores interactúan con los servicios relacionados
 (service.UserService) para realizar operaciones como obtener usuarios, insertar usuarios
 y agregar números de teléfono a los usuarios.*/

@@ -1,7 +1,7 @@
 package db
 
 import (
-	//addressClient "mvc-go/clients/address"
+	addressClient "mvc-go/clients-DAO/address"
 	//telephoneClient "mvc-go/clients/telephone"
 	userClient "mvc-go/clients-DAO/user"
 				"mvc-go/model"
@@ -10,9 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-/*Se importan los paquetes necesarios para el funcionamiento del código, incluyendo los paquetes de clientes
-(addressClient, telephoneClient, userClient), el paquete model que contiene las estructuras de datos del modelo
-y los paquetes gorm, gorm/dialects/mysql y logrus utilizados para la gestión de la base de datos y los registros de registro.*/
+
 
 var ( //declaro estas varibles, db de tipo gorm.db y err de tipo error
 	db  *gorm.DB
@@ -42,19 +40,19 @@ func init() { // init() que se ejecuta durante la inicialización del paquete.
 	//Se asigna la conexión db a las variables Db de los clientes (userClient.Db, addressClient.Db, telephoneClient.Db).
 	//Esto permite que los clientes utilicen la conexión a la base de datos para realizar operaciones.
 	userClient.Db = db
-//	addressClient.Db = db
+	addressClient.Db = db
 //	telephoneClient.Db = db
 }
 
 func StartDbEngine() {
 	// We need to migrate all classes model.
-
 	// se encarga de realizar la migración de las tablas del modelo a la base de datos.
 
 	db.AutoMigrate(&model.User{})
-	db.AutoMigrate(&model.Telephone{})
-
-	//	db.AutoMigrate(&model.Address{})
+	// db.AutoMigrate(&model.Telephone{}) no existe
+    db.AutoMigrate(&model.Address{})
+	db.AutoMigrate(&model.Hotel{})
+	db.AutoMigrate(&model.Reserv{})
 	
 	log.Info("Finishing Migration Database Tables")
 

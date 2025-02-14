@@ -1,5 +1,5 @@
 package model
-
+/*
 type Telephone struct {
 	Id     int    `gorm:"primaryKey"`
 	Code   string `gorm:"type:varchar(10);not null"`
@@ -9,4 +9,4 @@ type Telephone struct {
 
 type Telephones []Telephone
 
-
+*/
