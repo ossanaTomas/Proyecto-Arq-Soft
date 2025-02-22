@@ -1,10 +1,10 @@
 package db
 
 import (
-	addressClient "mvc-go/clients-DAO/address"
+	addressClient "backend/clients-DAO/address"
 	//telephoneClient "mvc-go/clients/telephone"
-	userClient "mvc-go/clients-DAO/user"
-				"mvc-go/model"
+	userClient "backend/clients-DAO/user"
+				"backend/model"
 				"github.com/jinzhu/gorm"
 				_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"

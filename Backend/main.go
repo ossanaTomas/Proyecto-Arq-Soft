@@ -1,8 +1,8 @@
 package main
 
 import (
-	"mvc-go/app" // contiene la logica y las rutas de aplicaciones
-	"mvc-go/db"  // contiene el codigo relacionado con la gestion de base de datos
+	"backend/app" // contiene la logica y las rutas de aplicaciones
+	"backend/db"  // contiene el codigo relacionado con la gestion de base de datos
 )
 
 func main() {

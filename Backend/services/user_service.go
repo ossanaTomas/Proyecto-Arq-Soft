@@ -3,11 +3,11 @@ package services
 import (
 	//addressCliente "mvc-go/clients/address"
 	//telephoneCliente "mvc-go/clients/telephone"
-	userCliente "mvc-go/clients-DAO/user"
+	userCliente "backend/clients-DAO/user"
 	//"mvc-go/clients-DAO/address"
-	"mvc-go/dto" //contienelas estructuras de datos de transferencia de objetos (DTO)
-	"mvc-go/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
-	e "mvc-go/utils/errors" //contiene el paquete errors
+	"backend/dto" //contienelas estructuras de datos de transferencia de objetos (DTO)
+	"backend/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
+	e "backend/utils/errors" //contiene el paquete errors
 	
 )
 

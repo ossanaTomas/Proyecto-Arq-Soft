@@ -2,7 +2,7 @@ package product
 
 import (
 	"errors"
-	"mvc-go/model" //importo del model
+	"backend/model" //importo del model
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 	"strings"

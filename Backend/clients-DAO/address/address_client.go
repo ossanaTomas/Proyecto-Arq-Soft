@@ -1,7 +1,7 @@
 package address
 
 import (
-	"mvc-go/model"
+	"backend/model"
 
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"

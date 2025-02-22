@@ -4,7 +4,7 @@ package app
 // de la logica de inicializacion del enrutador
 
 import (
-	userController "mvc-go/controllers/user"
+	userController "backend/controllers/user"
 	//importa el paquete "userController" del directorio "mvc-go/controllers/user".
 	//Esto indica que se utilizará un controlador específico para manejar las rutas relacionadas con los usuarios.
 

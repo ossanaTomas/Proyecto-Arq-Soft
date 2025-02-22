@@ -1,8 +1,8 @@
 package userController
 
 import (
-			"mvc-go/dto"
-	service "mvc-go/services"
+			"backend/dto"
+	service "backend/services"
 			"net/http"
 			"strconv"
 			"github.com/gin-gonic/gin"
