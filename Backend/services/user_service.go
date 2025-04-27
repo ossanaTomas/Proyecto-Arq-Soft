@@ -4,26 +4,33 @@ import (
 	//addressCliente "mvc-go/clients/address"
 	//telephoneCliente "mvc-go/clients/telephone"
 	userCliente "backend/clients-DAO/user"
+	"golang.org/x/crypto/bcrypt"
+	"github.com/golang-jwt/jwt"
 	//"mvc-go/clients-DAO/address"
-	"backend/dto" //contienelas estructuras de datos de transferencia de objetos (DTO)
+	"backend/dto"            //contienelas estructuras de datos de transferencia de objetos (DTO)
 	"backend/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
 	e "backend/utils/errors" //contiene el paquete errors
-	
+	"time"
 )
 
 type userService struct{}
 
 type userServiceInterface interface {
-	 /*userServiceInterface que contiene los métodos que deben ser
+	
+	/*userServiceInterface que contiene los métodos que deben ser
 	  implementados por el servicio de usuario. La interfaz userServiceInterface especifica los métodos
 	que deben estar presentes en cualquier implementación del servicio de usuario*/
 
-	GetUserById(id int) (dto.UserDetailDto, e.ApiError) 
+	GetUserById(id int) (dto.UserDetailDto, e.ApiError)
 	/*Recibe un ID de usuario como argumento y devuelve un dto.UserDetailDto que representa los detalles del
-	 usuario correspondiente. También devuelve un posible  error de tipo e.ApiError*/
+	usuario correspondiente. También devuelve un posible  error de tipo e.ApiError*/
+
+	//GetUserByMail(id int) (dto.UserDetailDto, e.ApiError)
+
 	GetUsers() (dto.UsersDto, e.ApiError) // lo mismo pero devulve todos los usuarios
 	InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
 	//AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserDetailDto, e.ApiError)
+	Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiError)
 }
 
 var (
@@ -37,7 +44,7 @@ func init() {
 	//del servicio que se utilice.
 }
 
-func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) { 
+func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) {
 	//implementacion del metodo getuserbyid
 	//El método recibe un ID de usuario como parámetro y devuelve un dto.UserDetailDto que contiene los detalles del
 	//usuario solicitado. También puede devolver un error de tipo e.ApiError en caso de que el usuario no sea encontrado.
@@ -56,17 +63,17 @@ func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) {
 	número del modelo al DTO. Estos DTO de teléfono se agregan al campo TelephonesDto de userDetailDto utilizando
 	la función append.*/
 
-		userDetailDto.Name = user.Name
-		userDetailDto.LastName = user.LastName
-		
-		/*
-	for _, telephone := range user.Telephones {
-		var dtoTelephone dto.TelephoneDto
-		dtoTelephone.Code = telephone.Code
-		dtoTelephone.Number = telephone.Number
+	userDetailDto.Name = user.Name
+	userDetailDto.LastName = user.LastName
 
-		userDetailDto.TelephonesDto = append(userDetailDto.TelephonesDto, dtoTelephone)
-	} */
+	/*
+		for _, telephone := range user.Telephones {
+			var dtoTelephone dto.TelephoneDto
+			dtoTelephone.Code = telephone.Code
+			dtoTelephone.Number = telephone.Number
+
+			userDetailDto.TelephonesDto = append(userDetailDto.TelephonesDto, dtoTelephone)
+		} */
 
 	/* se itera sobre cada usuario en la lista users. Para cada usuario, se crea un dto.UserDto y
 	se copian los datos relevantes del modelo User al DTO. Esto incluye el nombre, apellido, nombre
@@ -82,18 +89,18 @@ func (s *userService) GetUsers() (dto.UsersDto, e.ApiError) {
 	var usersDto dto.UsersDto
 
 	/* se itera sobre cada usuario en la lista users. Para cada usuario, se crea un dto.UserDto y se copian los
-	   datos relevantes del modelo User al DTO. 
+	   datos relevantes del modelo User al DTO.
 	   El DTO del usuario se agrega a la lista usersDto utilizando la función append*/
 
 	for _, user := range users {
 		var userDto dto.UserDto
 		userDto.Name = user.Name
 		userDto.LastName = user.LastName
-		userDto.UserName=user.UserName
-		userDto.Password=user.Password
-		userDto.Email=user.Email
+		userDto.UserName = user.UserName
+		userDto.Password = user.Password
+		userDto.Email = user.Email
 		userDto.Id = user.Id
-		userDto.Role=user.Role	
+		userDto.Role = user.Role
 		userDto.Address = dto.AddressDto{
 			Id:      user.Address.Id,
 			UserId:  user.Address.UserId,
@@ -102,7 +109,7 @@ func (s *userService) GetUsers() (dto.UsersDto, e.ApiError) {
 			City:    user.Address.City,
 			Country: user.Address.Country,
 		}
-		
+
 		usersDto = append(usersDto, userDto)
 		//agrega un nuevo elemento a la lista userDto
 	}
@@ -110,6 +117,13 @@ func (s *userService) GetUsers() (dto.UsersDto, e.ApiError) {
 	return usersDto, nil
 }
 
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), nil
+}
 
 func (s *userService) InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) {
 
@@ -118,22 +132,30 @@ func (s *userService) InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) 
 	user.Name = userDto.Name
 	user.LastName = userDto.LastName
 	user.UserName = userDto.UserName
-	user.Password = userDto.Password
-    user.Email = userDto.Email
-	user.Address= model.Address {
-      Street: userDto.Address.Street,
-	  Number: userDto.Address.Number,
-	  City: userDto.Address.City,
-	  Country: userDto.Address.Country,
-	  UserId: user.Id,
+
+	// Hashear la contraseña antes de guardarla
+	hashedPassword, err := HashPassword(userDto.Password)
+	if err != nil {
+		ApiError := e.NewInternalServerApiError("Error al encriptar la contraseña", err)
+		return dto.UserDto{}, ApiError
+	}
+	user.Password = hashedPassword // Guardar solo la contraseña hasheada
+
+	user.Email = userDto.Email
+	user.Address = model.Address{
+		Street:  userDto.Address.Street,
+		Number:  userDto.Address.Number,
+		City:    userDto.Address.City,
+		Country: userDto.Address.Country,
+		UserId:  user.Id,
 	}
 
-  // delegar la inserccion a la capa Cliente-DAO
-	user , err := userCliente.InsertUser(user)
+	// delegar la inserccion a la capa Cliente-DAO
+	user, err = userCliente.InsertUser(user)
 
-	if(err!=nil){
+	if err != nil {
 		//crea un error del tipo bad reques, esto coincide con 404 como estudiamos!
-		ApiError:=e.NewBadRequestApiError(err.Error()) 
+		ApiError := e.NewBadRequestApiError(err.Error())
 		// devolvemos un dto vacio{} ya que no puedo crearlo y el error
 		return dto.UserDto{}, ApiError
 	}
@@ -141,6 +163,57 @@ func (s *userService) InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) 
 	userDto.Id = user.Id
 	return userDto, nil
 }
+
+func (s *userService) Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiError) {
+
+	var user model.User
+	var LoginResponse dto.LoginResponseDTO
+
+	user, err := userCliente.GetUserByEmail(loginDto.Email)
+
+	if err != nil {
+		return LoginResponse, e.NewUnauthorizedApiError(err.Error())
+	}
+
+	err2:= bcrypt.CompareHashAndPassword([]byte(user.Password),[]byte(loginDto.Password))
+ 
+	if err2!= nil{
+		return LoginResponse, e.NewBadRequestApiError("Email o contraseña incorrectos")
+	}
+		Token:= generateToken(user)
+
+		LoginResponse.Id = user.Id
+		LoginResponse.Name =user.Name
+		LoginResponse.Token = Token
+		//log.Debug(loginResponse)
+		return LoginResponse, nil
+	}
+
+
+
+
+
+
+func generateToken(user model.User) string {
+
+	// creamos un claim, que son los datos que el JWT contendra
+	//con .mapClaims se mapea claves-valor
+	claims := jwt.MapClaims{
+		"id": user.Id,
+		"exp": time.Now().Add(time.Hour * 1).Unix(),
+	}
+	
+	// se crea el token usando el algoritmo HS256 e claims como la informacion del token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// se firma el token con la clave secreta jaja
+	tokenString, err := token.SignedString([]byte("MiclaveSecreta"))
+	if err != nil {
+		return ""
+	}
+	 //si no hay error retornamos el token correspondiente. 
+	return tokenString
+}
+
 
 /*
 func (s *userService) AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserDetailDto, e.ApiError) {

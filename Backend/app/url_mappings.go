@@ -22,6 +22,9 @@ func mapUrls() {
 	router.POST("/user", userController.UserInsert)
 	//router.POST("/user/:id/telephone", userController.AddUserTelephone)
 
+    //Login Mapping
+	router.POST("/login",userController.Login)
+
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,
 	//se definen las rutas y se especifican los controladores que manejarán las solicitudes HTTP correspondientes.
 

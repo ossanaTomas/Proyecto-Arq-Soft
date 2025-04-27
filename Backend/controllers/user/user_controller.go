@@ -6,6 +6,7 @@ import (
 			"net/http"
 			"strconv"
 			"github.com/gin-gonic/gin"
+		
 	log  	"github.com/sirupsen/logrus"
 )
 
@@ -72,6 +73,11 @@ func GetUsers(c *gin.Context) { //Esta función manejará una solicitud HTTP par
 	c.JSON(http.StatusOK, usersDto)
 }
 
+
+
+
+
+
 func UserInsert(c *gin.Context) { 
 	var userDto dto.UserDto 
 
@@ -101,6 +107,32 @@ func UserInsert(c *gin.Context) {
 	c.JSON(http.StatusCreated, userDto) // Si no hay errores, se devuelve una respuesta JSON
 	// con un código de estado HTTP 201 (Created) y los datos del usuario insertado.
 }
+
+
+
+func Login(c *gin.Context){
+
+	var loginDto dto.LoginDto 
+	err := c.BindJSON(&loginDto)
+
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	loginResponse, er := service.UserService.Login(loginDto)
+
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+	c.JSON(http.StatusOK,loginResponse)
+
+}
+
+
+
 
 
 /*

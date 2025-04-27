@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Bot(props){
     const {BotText,navegar }= props; 
-    const navigate = useNavigate(); // Hook para navegar
+    const navigate = useNavigate(); //Esto es un Hook para navegar
 
 
     const handleClick = () => {
@@ -14,7 +14,6 @@ function Bot(props){
         <>
         <button className="ButonGeneric" onClick={handleClick}>
            {BotText}
-           
         </button>
         </> 
     )

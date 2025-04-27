@@ -35,6 +35,17 @@ func GetUsers() model.Users { // no recibe paremetros y devuleveuna coleccion de
 }
 
 
+func GetUserByEmail(Email string) (model.User, error) {
+	var user model.User
+	result := Db.Where("Email = ?", Email).First(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	return user, nil
+}
+
+
 func InsertUser(user model.User) (model.User, error) { //recibe un objeto model.user y devuelve un usuario insertado.
 	result := Db.Create(&user)
 
