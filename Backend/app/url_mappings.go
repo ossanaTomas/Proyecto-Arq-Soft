@@ -4,6 +4,7 @@ package app
 // de la logica de inicializacion del enrutador
 
 import (
+	hotelControler "backend/controllers/hotel"
 	userController "backend/controllers/user"
 	//importa el paquete "userController" del directorio "mvc-go/controllers/user".
 	//Esto indica que se utilizará un controlador específico para manejar las rutas relacionadas con los usuarios.
@@ -17,13 +18,24 @@ func mapUrls() {
 	//las rutas de la aplicación y asignarlas a los controladores correspondientes.
 
 	// Users Mapping 
+	//USERS
 	router.GET("/user/:id", userController.GetUserById)
 	router.GET("/user", userController.GetUsers)
 	router.POST("/user", userController.UserInsert)
+
+
+	
 	//router.POST("/user/:id/telephone", userController.AddUserTelephone)
 
     //Login Mapping
 	router.POST("/login",userController.Login)
+
+
+
+	//Hotels
+	router.GET("/hotels",hotelControler.GetHotels)
+	router.POST("/hotels",hotelControler.InsertHotel)
+
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,
 	//se definen las rutas y se especifican los controladores que manejarán las solicitudes HTTP correspondientes.

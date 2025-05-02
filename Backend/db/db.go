@@ -2,6 +2,7 @@ package db
 
 import (
 	addressClient "backend/clients-DAO/address"
+	hotelClient "backend/clients-DAO/hotel"
 	//telephoneClient "mvc-go/clients/telephone"
 	userClient "backend/clients-DAO/user"
 				"backend/model"
@@ -19,7 +20,7 @@ var ( //declaro estas varibles, db de tipo gorm.db y err de tipo error
 
 func init() { // init() que se ejecuta durante la inicialización del paquete.
 	// DB Connections Paramters, se establecen los aparametros de coneccion a la base de datos
-	DBName := "hotel"
+	DBName := "hotel_V2"
 	DBUser := "root"
 	DBPass := ""
 	//DBPass := os.Getenv("MVC_DB_PASS")
@@ -41,7 +42,12 @@ func init() { // init() que se ejecuta durante la inicialización del paquete.
 	//Esto permite que los clientes utilicen la conexión a la base de datos para realizar operaciones.
 	userClient.Db = db
 	addressClient.Db = db
+	hotelClient.Db=db
 //	telephoneClient.Db = db
+
+
+//cada una de las lineas anteriores pasa una instancia de conexion a los paquetes,
+//inicializando la varibale declara en estos como db
 }
 
 func StartDbEngine() {
@@ -52,7 +58,11 @@ func StartDbEngine() {
 	// db.AutoMigrate(&model.Telephone{}) no existe
     db.AutoMigrate(&model.Address{})
 	db.AutoMigrate(&model.Hotel{})
+	db.AutoMigrate(&model.Imagen{})
+	db.AutoMigrate(&model.Ameniti{})
 	db.AutoMigrate(&model.Reserv{})
+
+	
 	
 	log.Info("Finishing Migration Database Tables")
 

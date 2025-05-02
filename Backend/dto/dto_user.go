@@ -8,9 +8,9 @@ type UserDto struct {
 	LastName string `json:"last_name"`
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
-	Email    string `json:"Email"`
+	Email    string `json:"email"`
 	Role     string `json:"role"`
-	Address  AddressDto `json:"Adress"`
+	Address  AddressDto `json:"Address"`
 	Id       int    `json:"id"`
 
 }

@@ -1,0 +1,39 @@
+.container {
+    min-height: 100vh;
+    background-color: var(--background-color);
+  }
+
+  .main {
+    max-width: 60%;
+    margin: var(--padding-large) auto;
+    padding: var(--padding-medium);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+  
+.regNewUser{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-medium);
+}
+
+.input{
+    padding: var(--padding-small);
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: border-color 0.3s ease;
+}
+
+
+
+
+  @media (max-width: 768px) {
+    .main {
+      margin: var(--padding-medium);
+      padding: var(--padding-small);
+    }
+  }

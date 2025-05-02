@@ -1,0 +1,20 @@
+.container {
+    min-height: 100vh;
+    background-color: var(--background-color);
+  }
+  
+  .main {
+    max-width: 400px;
+    margin: var(--padding-large) auto;
+    padding: var(--padding-medium);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+  
+  @media (max-width: 768px) {
+    .main {
+      margin: var(--padding-medium);
+      padding: var(--padding-small);
+    }
+  }

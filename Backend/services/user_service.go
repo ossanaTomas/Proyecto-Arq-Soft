@@ -7,8 +7,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/golang-jwt/jwt"
 	//"mvc-go/clients-DAO/address"
-	"backend/dto"            //contienelas estructuras de datos de transferencia de objetos (DTO)
-	"backend/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
+	"backend/dto"            
+	"backend/model"         
 	e "backend/utils/errors" //contiene el paquete errors
 	"time"
 )
@@ -16,26 +16,20 @@ import (
 type userService struct{}
 
 type userServiceInterface interface {
-	
 	/*userServiceInterface que contiene los métodos que deben ser
 	  implementados por el servicio de usuario. La interfaz userServiceInterface especifica los métodos
 	que deben estar presentes en cualquier implementación del servicio de usuario*/
-
 	GetUserById(id int) (dto.UserDetailDto, e.ApiError)
-	/*Recibe un ID de usuario como argumento y devuelve un dto.UserDetailDto que representa los detalles del
-	usuario correspondiente. También devuelve un posible  error de tipo e.ApiError*/
-
 	//GetUserByMail(id int) (dto.UserDetailDto, e.ApiError)
-
-	GetUsers() (dto.UsersDto, e.ApiError) // lo mismo pero devulve todos los usuarios
+	GetUsers() (dto.UsersDto, e.ApiError) 
 	InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
 	//AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserDetailDto, e.ApiError)
 	Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiError)
 }
 
-var (
-	UserService userServiceInterface // se define la variable de tipo userServiceInterface
-)
+//Como la siguiente variable esta en mayuscula es accesible desde otros lados, por lo tanot
+//es la "Puerta de entrada" a los metodos implementados
+var UserService userServiceInterface 
 
 func init() {
 	UserService = &userService{} //se inicia userService  para que apunte a una instancia de userService.
@@ -170,6 +164,7 @@ func (s *userService) Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiE
 	var LoginResponse dto.LoginResponseDTO
 
 	user, err := userCliente.GetUserByEmail(loginDto.Email)
+    
 
 	if err != nil {
 		return LoginResponse, e.NewUnauthorizedApiError(err.Error())
@@ -185,6 +180,7 @@ func (s *userService) Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiE
 		LoginResponse.Id = user.Id
 		LoginResponse.Name =user.Name
 		LoginResponse.Token = Token
+		LoginResponse.Role =user.Role
 		//log.Debug(loginResponse)
 		return LoginResponse, nil
 	}
@@ -250,4 +246,3 @@ func (s *userService) AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserD
 	return userDetailDto, nil
 }*/
 
-//visitar addressCliente, telephoneCliente y userCliente

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './Styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from './Context/AuthContext';
 
 
 //De cierta manera este codigo es como el analogo a lo que es el main en otros lenguajes 
@@ -13,10 +13,13 @@ import reportWebVitals from './reportWebVitals';
 // En este caso, el siguiente codigo declara el punto de entrada desde el cual se monta la 
 // aplicacion en el DOM. 
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 // El componente app, representaria toda la aplicacion. 

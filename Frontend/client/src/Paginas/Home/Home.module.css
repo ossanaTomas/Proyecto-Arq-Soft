@@ -1,0 +1,15 @@
+.containedor {
+    min-height: 100vh;
+    background-color: var(--background-color);
+   
+  }
+  
+  .main {
+    margin: 200px;
+    max-width: 600px;
+    margin: var(--padding-large) auto;
+    padding: var(--padding-medium);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }

@@ -1,6 +1,6 @@
 package dto
 
-type AddressDto struct {
+type  AddressDto struct {
 	Id      int    `json:"Adress_id"`
 	UserId  int    `json:"User_id"` // Clave foránea
 	Street  string `json:"Street"`

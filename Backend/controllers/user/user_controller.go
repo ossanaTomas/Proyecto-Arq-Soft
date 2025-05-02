@@ -127,6 +127,7 @@ func Login(c *gin.Context){
 		c.JSON(er.Status(), er)
 		return
 	}
+	//si todo esta OK respondo el status junto con la info de login
 	c.JSON(http.StatusOK,loginResponse)
 
 }

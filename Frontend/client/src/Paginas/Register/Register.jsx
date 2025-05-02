@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import Bot from '../Components/Boton';
+import Bot from '../../Components/Boton/Boton';
 import { useNavigate } from 'react-router-dom';
+import styles from "./Register.module.css"
+import MenuBar from '../../Components/MenuBar/MenuBar';
 
 const Register = () => {
 
@@ -74,21 +76,26 @@ const Register = () => {
 
 
 return (
-    <>
-        <form onSubmit={submit} className='registerNewUser'>
-            <h1> Registrarse</h1>
-            <input type="Text" placeholder="Nombre" onChange={e => setName(e.target.value)} required />
-            <input type="Text" placeholder="Apellido" onChange={e => setLasname(e.target.value)} required />
-            <input type="Email" placeholder="Email" onChange={e => setEmail(e.target.value)} required />
-            <input type="Text" placeholder="Nombre usuario" onChange={e => setUsername(e.target.value)} required />
-            <input type="Password" placeholder="Contraseña" onChange={e => setPassword(e.target.value)} required />
-            <input type="Text" placeholder="Calle" onChange={e => setStreeet(e.target.value)} required />
-            <input type="Number" placeholder="Numero" onChange={e => setNumber(e.target.value)} required />
-            <input type="Text" placeholder="Ciudad" onChange={e => setCity(e.target.value)} required />
-            <input type="Text" placeholder="Pais" onChange={e => setCountry(e.target.value)} required />
+     <div className={styles.container}>
+     <MenuBar/>
+     <main className={styles.main}>
+        <form onSubmit={submit} className={styles.regNewUser}>
+            <h1>Registrarse</h1>
+            <input type="Text" placeholder="Nombre" onChange={e => setName(e.target.value)} required  className={styles.input}/>
+            <input type="Text" placeholder="Apellido" onChange={e => setLasname(e.target.value)} required  className={styles.input}/>
+            <input type="Email" placeholder="Email" onChange={e => setEmail(e.target.value)} required className={styles.input} />
+            <input type="Text" placeholder="Nombre usuario" onChange={e => setUsername(e.target.value)} required className={styles.input} />
+            <input type="Password" placeholder="Contraseña" onChange={e => setPassword(e.target.value)} required  className={styles.input}/>
+            <input type="Text" placeholder="Calle" onChange={e => setStreeet(e.target.value)} required className={styles.input} />
+            <input type="Number" placeholder="Numero" onChange={e => setNumber(e.target.value)} required className={styles.input} />
+            <input type="Text" placeholder="Ciudad" onChange={e => setCity(e.target.value)} required  className={styles.input}/>
+            <input type="Text" placeholder="Pais" onChange={e => setCountry(e.target.value)} required className={styles.input}/>
             <Bot BotText={"Registrar"} type="submit"></Bot>
         </form>
-    </>
+        </main>
+
+     </div>
+    
     //onchange es un manejador de eventos de react, activado cuando cambia su input
     //{} indican que dentro de onChange se evalua codigo Javascript
     //e => setLastname(e.target.value), funcion flacha que recibe un evento como parametro  y ejecuta setLastName...
