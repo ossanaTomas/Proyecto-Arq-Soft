@@ -46,3 +46,39 @@ func InsertHotel(c *gin.Context){
 	c.JSON(http.StatusCreated, hotelDto)
 
 }
+
+
+func InsertNewAmenity(c *gin.Context){
+	 var amenitiDto dto.AmenitiDto
+	 err := c.BindJSON(& amenitiDto) 
+	
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+  
+    amenitiDto,er := service.HotelService.InsertNewAmenity(amenitiDto)
+
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+	
+	c.JSON(http.StatusCreated, amenitiDto)
+}
+
+
+
+func GetAmenities(c *gin.Context){
+	var amenitiesDto dto.AmenitiesDto 
+	amenitiesDto, err := service.HotelService.GetAmenities()
+
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, amenitiesDto)
+}
+
+

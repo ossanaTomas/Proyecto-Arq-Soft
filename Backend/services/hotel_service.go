@@ -17,6 +17,9 @@ type hotelService struct{}
 type hotelServiceIterface interface {
 	GetHotels() (dto.HotelsDto, e.ApiError)
 	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
+
+	InsertNewAmenity(amenitiDto dto.AmenitiDto)(dto.AmenitiDto, e.ApiError)
+	GetAmenities()(dto.AmenitiesDto,e.ApiError)
 }
 
 var HotelService hotelServiceIterface
@@ -24,8 +27,6 @@ var HotelService hotelServiceIterface
 func init() {
 	HotelService = &hotelService{}
 }
-
-
 
 
 func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
@@ -52,10 +53,6 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	hotelDto.Id = hotel.Id
 	return hotelDto, nil
 }
-
-
-
-
 
 
 func (s *hotelService) GetHotels() (dto.HotelsDto, e.ApiError) {
@@ -93,4 +90,45 @@ func (s *hotelService) GetHotels() (dto.HotelsDto, e.ApiError) {
 	}
 
 	return hotelsDto, nil
+}
+
+
+func(s *hotelService) InsertNewAmenity(amenitiDto dto.AmenitiDto)(dto.AmenitiDto, e.ApiError){
+  
+	existingAmenity,er := hotelCliente.FindAmenityByName(amenitiDto.Name)
+	if existingAmenity.Id != 0 {
+		return dto.AmenitiDto{}, e.NewBadRequestApiError("Amenity ya existe con ese nombre")
+	}
+	if er != nil{
+        return dto.AmenitiDto{}, e.NewBadRequestApiError(er.Error())
+	}
+
+	var amenity model.Ameniti
+	amenity.Name = amenitiDto.Name
+	amenity.Description = amenitiDto.Description
+
+	amenity, err := hotelCliente.InsertAmenity(amenity)
+	if err != nil {
+		return dto.AmenitiDto{}, e.NewBadRequestApiError(err.Error())
+	}
+
+	return amenitiDto, nil
+}
+
+
+func(s *hotelService) GetAmenities()(dto.AmenitiesDto,e.ApiError){
+    
+	var amenitiesDto dto.AmenitiesDto
+	var amenities model.Amenities =hotelCliente.GetAmenities()
+  
+	for _, ameniti := range amenities{
+	 var amenitiDto dto.AmenitiDto
+	 amenitiDto.Id=ameniti.Id
+	 amenitiDto.Name=ameniti.Name
+	 amenitiDto.Description=ameniti.Description
+
+	 amenitiesDto =append(amenitiesDto,amenitiDto)
+	}
+  
+	return amenitiesDto, nil
 }

@@ -36,6 +36,9 @@ func mapUrls() {
 	router.GET("/hotels",hotelControler.GetHotels)
 	router.POST("/hotels",hotelControler.InsertHotel)
 
+	//Amenities
+	router.POST("/amenities",hotelControler.InsertNewAmenity)
+	router.GET("/amenities",hotelControler.GetAmenities)
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,
 	//se definen las rutas y se especifican los controladores que manejarán las solicitudes HTTP correspondientes.
