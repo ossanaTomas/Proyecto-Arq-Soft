@@ -6,3 +6,4 @@ type ImagenDto struct {
 }
 
 type ImagenesDto []ImagenDto
+

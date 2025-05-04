@@ -1,23 +1,30 @@
 package hotel
 
 import (
+
 	"backend/model" //importo del model
 	"errors"
 
 	"fmt"
+	"strings"
+    e "backend/utils/errors"
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
-	"strings"
 )
 
 var Db *gorm.DB
 
 func GetHotels() model.Hotels { // no recibe paremetros y devuleveuna coleccion de usuarios
 	var hotels model.Hotels
-	Db.Find(&hotels)
-	log.Debug("Hoteles: ", hotels)
+	err := Db.Preload("Amenities").Preload("Imagenes").Find(&hotels).Error
+	if err != nil {
+		log.Error("Error al obtener los hoteles con relaciones:", err)
+		return model.Hotels{}
+	}
+	log.Debug("Hoteles con relaciones: ", hotels)
 	return hotels
 }
+
 
 func InsertHotel(hotel model.Hotel) (model.Hotel, error) {
 
@@ -80,7 +87,29 @@ func InsertAmenity(amenity model.Ameniti)(model.Ameniti, error){
 func GetAmenities() (model.Amenities){
 	var amenities model.Amenities
      Db.Find(&amenities)
-
-
+	 log.Debug("amenities: ",amenities)
 	return amenities
+}
+
+
+func FindAmenityById(id int) model.Ameniti {
+    var ameniti model.Ameniti
+    Db.First(&ameniti, id)
+    return ameniti
+}
+
+func InsertAmenitiesForHotel(hotel model.Hotel, amenityIDs []uint) e.ApiError {
+	var amenities []model.Ameniti
+
+	err := Db.Where("id IN (?)", amenityIDs).Find(&amenities).Error
+	if err != nil {
+		return e.NewInternalServerApiError("no se pudieron encontrar las amenities", err)
+	}
+
+	err = Db.Model(&hotel).Association("Amenities").Append(amenities).Error
+	if err != nil {
+		return e.NewInternalServerApiError("no se pudieron asociar las amenities", err)
+	}
+
+	return nil
 }

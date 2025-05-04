@@ -13,7 +13,7 @@ import (
 
 func GetHotels(c *gin.Context) { 
 
-	var hotelsDto dto.HotelsDto 
+	var hotelsDto dto.HotelsResponseDto
 	hotelsDto, err := service.HotelService.GetHotels()
 
 	if err != nil {
@@ -72,10 +72,10 @@ func InsertNewAmenity(c *gin.Context){
 
 func GetAmenities(c *gin.Context){
 	var amenitiesDto dto.AmenitiesDto 
-	amenitiesDto, err := service.HotelService.GetAmenities()
+	amenitiesDto, er := service.HotelService.GetAmenities()
 
-	if err != nil {
-		c.JSON(err.Status(), err)
+	if er != nil {
+		c.JSON(er.Status(), er)
 		return
 	}
 	c.JSON(http.StatusOK, amenitiesDto)

@@ -4,7 +4,7 @@ import (
 	//addressCliente "mvc-go/clients/address"
 	//telephoneCliente "mvc-go/clients/telephone"
 	hotelCliente "backend/clients-DAO/hotel"
-
+    
 	//"mvc-go/clients-DAO/address"
 	"backend/dto"            //contienelas estructuras de datos de transferencia de objetos (DTO)
 	"backend/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
@@ -15,7 +15,7 @@ import (
 type hotelService struct{}
 
 type hotelServiceIterface interface {
-	GetHotels() (dto.HotelsDto, e.ApiError)
+	GetHotels() (dto.HotelsResponseDto, e.ApiError)
 	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
 
 	InsertNewAmenity(amenitiDto dto.AmenitiDto)(dto.AmenitiDto, e.ApiError)
@@ -29,6 +29,7 @@ func init() {
 }
 
 
+
 func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
   
 	var hotel model.Hotel
@@ -36,45 +37,57 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	hotel.Name= hotelDto.Name
 	hotel.Description=hotelDto.Description
 	hotel.Rooms=hotelDto.Rooms
-
-	hotel.Imagenes = []model.Imagen{}
-    hotel.Amenities = []model.Ameniti{}
 	
-	
-	hotel, err := hotelCliente.InsertHotel(hotel)
 
+	var imagenesModel model.Imagenes
+	for _, imagen := range hotelDto.Imagenes {
+		imagenModel := model.Imagen{
+			Url: imagen.Url,
+		}
+	 imagenesModel = append(imagenesModel, imagenModel)
+	}
+	hotel.Imagenes = imagenesModel
+
+
+	savedHotel, err := hotelCliente.InsertHotel(hotel)
 	if err != nil {
-		//crea un error del tipo bad reques, esto coincide con 404 como estudiamos!
-		ApiError := e.NewBadRequestApiError(err.Error())
-		// devolvemos un dto vacio{} ya que no puedo crearlo y el error
-		return dto.HotelDto{}, ApiError
+		return dto.HotelDto{}, e.NewBadRequestApiError(err.Error())
 	}
 
-	hotelDto.Id = hotel.Id
+	if len(hotelDto.Amenities) > 0 {
+		err := hotelCliente.InsertAmenitiesForHotel(savedHotel, hotelDto.Amenities)
+		if err != nil {
+			return dto.HotelDto{}, err
+		}
+	}
+
+	hotelDto.Id = savedHotel.Id
 	return hotelDto, nil
 }
 
 
-func (s *hotelService) GetHotels() (dto.HotelsDto, e.ApiError) {
+func (s *hotelService) GetHotels() (dto.HotelsResponseDto, e.ApiError) {
 	var hotels model.Hotels = hotelCliente.GetHotels()
-	var hotelsDto dto.HotelsDto
+	var hotelsDto dto.HotelsResponseDto
 
 	for _, hotel := range hotels {
-		var hotelDto dto.HotelDto
+		var hotelDto dto.HotelResponseDto
 		hotelDto.Id = hotel.Id
 		hotelDto.Name = hotel.Name
+		hotelDto.Description=hotel.Description
 		hotelDto.Rooms = hotel.Rooms
 
 
 		var amenityDtos []dto.AmenitiDto
 		for _, amenity := range hotel.Amenities {
 			amenityDto := dto.AmenitiDto{
+				Id: amenity.Id,
 				Name:        amenity.Name,
 				Description: amenity.Description,
 			}
 			amenityDtos = append(amenityDtos, amenityDto)
 		}
-		var imagenesDto dto.ImagenesDto
+		var imagenesDto []dto.ImagenDto
 		for _, imagen := range hotel.Imagenes {
 			imagenDto := dto.ImagenDto{
 				Url: imagen.Url,
