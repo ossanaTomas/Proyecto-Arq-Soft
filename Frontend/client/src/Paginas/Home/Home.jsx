@@ -1,47 +1,38 @@
 //home.jsx
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
-import { useContext } from 'react';
 import Bot from '../../Components/Boton/Boton';
 import MenuBar from '../../Components/MenuBar/MenuBar';
-import styles from './Home.module.css'
+import styles from './Home.module.css';
+import CardHotel from '../../Components/CardHotel/CardHotel';
+import { useFetch } from '../../Components/usefetche';
 
 
-const GetUsers = () => {
-    const [users, setUsers] = useState([0]);
 
-    useEffect(() => {
-        fetch(("http://localhost:8090/user"))
-            .then((response) => response.json())
-            .then((users) => setUsers(users))
-            .catch((error) => console.error("Error al obtener los datos:", error));
+async function gethotels() {
+  return await fetch('http://localhost:8090/hotels', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then(response => response.json());
+}
 
-    }, []);
 
-    if (!users) return <p>Cargando usuario...</p>;
-
-    return (
-        <div>
-            <h1>Lista de Usuarios</h1>
-            <ul>
-                {users.map((user, index) => (
-                    <li key={index}>
-                        {user.name}{"  "}
-                        {user.last_name}{"  -Email:"}  
-                        {user.email}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
 
 
 
 function Home() {
     const { user, logout } = useContext(AuthContext);
+    const[hotels,setHotels]=useState([]);
+  
 
+    useEffect(()=>{
+      gethotels().then(setHotels); 
+    },[]);
+
+    console.log(hotels) 
+    
     const renderAuthOptions = () => {
         if (user) {
             return (
@@ -60,16 +51,28 @@ function Home() {
         );
     };
 
+    
     return (
         <div className={styles.contenedor}>
-            <MenuBar>
-                {renderAuthOptions()} {/* ACÁ usás la función */}
-            </MenuBar>
-            <div className={styles.main}>
-                <GetUsers />
+          <MenuBar>
+            {renderAuthOptions()}
+          </MenuBar>
+    
+          <div className={styles.main}>
+            <h2 className={styles.titulo}>Nuestros Hoteles</h2>
+            <div className={styles.cardGrid}>
+          <div>
+        
+           { hotels.map((hotel) => (
+  
+         <CardHotel hotel={hotel}/>
+        ))}
+      
+          </div>
             </div>
+          </div>
         </div>
-    );
+      );
 }
 
 
