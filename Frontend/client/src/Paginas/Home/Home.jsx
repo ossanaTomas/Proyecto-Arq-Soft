@@ -35,13 +35,29 @@ function Home() {
     
     const renderAuthOptions = () => {
         if (user) {
+
+
+         if(user.role=="admin"){
+
+          return(
+            <>
+                
+                <Bot BotText={`Hola ${user.name}`}/>
+                <Bot BotText={"Administrar"}  navegar={'/hoteles/insertar'}/>
+                <Bot BotText={"Cerrar sesión"}  onClick={logout}/>
+            </>
+          )
+
+         }
+
+           console.log(user)
             return (
                 //cuando haga clik en hola user que haga otra cosa 
                 <>
                 <Bot BotText={`Hola ${user.name}`}/>
                 <Bot BotText={"Cerrar sesión"}  onClick={logout}/>
                 </>
-            );
+            );  
         }
         return (
             <>
