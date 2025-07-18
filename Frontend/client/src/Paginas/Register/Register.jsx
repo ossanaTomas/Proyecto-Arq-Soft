@@ -53,7 +53,7 @@ const Register = () => {
             //MEJORAR REDIRECCION AL INGRESAR USUARIO
             if (response.ok) {
                 alert("Registro exitoso. Redirigiendo...");
-                navigate('/Saludo');
+                navigate('/');
             } else {
                 alert(`Error: ${data.message}`);
             }

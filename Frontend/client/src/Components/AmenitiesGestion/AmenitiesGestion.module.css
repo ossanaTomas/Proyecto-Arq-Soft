@@ -1,0 +1,188 @@
+.cardContainer {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  max-width: 500px;
+  width: 100%;
+}
+
+.cardContainer:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  background-color: #ffffff;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.amenityName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937; /* gris oscuro */
+  margin: 0;
+}
+
+.descripcion {
+  font-size: 0.95rem;
+  color: #4b5563; /* gris medio */
+  line-height: 1.4;
+  margin: 0;
+}
+
+.labelTit {
+  font-weight: 700;
+  text-align: center;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.label {
+  font-weight: 600;
+  display: block;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+}
+
+/* Botón común */
+.buttonGroup button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Efecto hover general */
+.buttonGroup button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Volver */
+.cancelButton {
+  background-color: #c0c0c0;
+  color: #1f2937;
+}
+
+/* Guardar */
+.subimiButton {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Eliminar */
+.deletButton {
+  background-color: #dc2626;
+  color: white;
+}
+
+/*Estilos para recuadro de confirmar eliminar el hotel */
+
+.overlay { /* Overlay quiere decir cubir, este es una capa flotante encima del contenido*/
+  position: fixed;
+  top: 0;  
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center; /* centrado horizontal */
+  align-items: center; /* centrado vertical*/
+  animation: fadeIn 0.3s ease-in-out forwards;
+  z-index: 999;
+}
+
+.modal { /* capa flotante*/
+  background-color: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px ;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+.modalActions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50%); /* empieza más abajo */
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+
+.confirmBtn {
+  background-color: #dc2626;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hotelNameHighlight {
+  color: #1d4ed8;
+  font-weight: bold;
+}

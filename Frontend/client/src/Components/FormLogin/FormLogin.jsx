@@ -34,7 +34,7 @@ const FormLogin=()=>{
             if (response.ok) {
                 login({id:data.id,name:data.name,role:data.role},data.token);
                 alert(`Inicio Exitoso! Bienvenido ${data.name}!`);
-                navigate("/"); 
+                navigate('/'); 
             } else {
                 alert(`Error: ${data.message}`);
             }

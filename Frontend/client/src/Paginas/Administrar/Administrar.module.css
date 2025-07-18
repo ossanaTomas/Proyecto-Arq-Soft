@@ -1,0 +1,154 @@
+.container {
+  height: 100vh;
+   display: flex;
+  flex-direction: column;
+  background-color: #f3f4f6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.dashboardLayout {
+  display: flex;
+  flex: 1;
+  overflow: hidden; 
+}
+
+/* Sidebar (ya tiene con su propio estilo) */
+
+.headerRight {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.subimiButton {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Contenido principal */
+.dashboardContent {
+  flex: 1;
+  padding: 2rem; 
+  padding-bottom: 8rem;
+  overflow-y: auto; /*  scroll vertical  */
+  height: 100vh;    /*necesario para que funcione el scroll */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.hotelGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+
+}
+
+.regNewUser h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1f2937;
+}
+
+.input {
+  display: block;
+  width: 80%;
+  margin: 0.75rem auto;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.amenitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.amenityCard {
+  background-color: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.amenityCard:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.selected {
+  background-color: #e0f2fe;
+  border-color: #3b82f6;
+  color: #1e3a8a;
+}
+
+.newAmenityForm {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.newAmenityForm input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.newAmenityForm button {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.newAmenityForm button:hover {
+  background-color: #1d4ed8;
+}
