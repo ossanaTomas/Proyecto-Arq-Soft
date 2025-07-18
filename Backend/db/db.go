@@ -3,6 +3,7 @@ package db
 import (
 	addressClient "backend/clients-DAO/address"
 	hotelClient "backend/clients-DAO/hotel"
+	amenitiClient"backend/clients-DAO/ameniti"
 	//telephoneClient "mvc-go/clients/telephone"
 	userClient "backend/clients-DAO/user"
 				"backend/model"
@@ -43,6 +44,7 @@ func init() { // init() que se ejecuta durante la inicialización del paquete.
 	userClient.Db = db
 	addressClient.Db = db
 	hotelClient.Db=db
+	amenitiClient.Db=db
 //	telephoneClient.Db = db
 
 

@@ -4,8 +4,10 @@ package app
 // de la logica de inicializacion del enrutador
 
 import (
-	hotelControler "backend/controllers/hotel"
+	amenitiController "backend/controllers/ameniti"
+	hotelController "backend/controllers/hotel"
 	userController "backend/controllers/user"
+
 	//importa el paquete "userController" del directorio "mvc-go/controllers/user".
 	//Esto indica que se utilizará un controlador específico para manejar las rutas relacionadas con los usuarios.
 
@@ -22,23 +24,31 @@ func mapUrls() {
 	router.GET("/user/:id", userController.GetUserById)
 	router.GET("/user", userController.GetUsers)
 	router.POST("/user", userController.UserInsert)
-
-
+	router.PUT("/user/role/:id", userController.ChangeRole)
 	
 	//router.POST("/user/:id/telephone", userController.AddUserTelephone)
 
     //Login Mapping
 	router.POST("/login",userController.Login)
 
+	
+	//Hotels:
+	router.GET("/hotels",hotelController.GetHotels)
+	router.POST("/hotels",hotelController.InsertHotel)
+	router.PUT("/hotels/:id",hotelController.UpdateHotel)
+    router.DELETE("/hotels/:id", hotelController.DeleteHotel)
+
+	//Amenities:
+	router.POST("/amenities",amenitiController.InsertNewAmenity)
+	router.GET("/amenities",amenitiController.GetAmenities)
+    router.PUT("/amenities/:id",amenitiController.UpdateAmenities)
+	router.DELETE("/amenities/:id",amenitiController.DeleteAmenities)
+	
+	//Imagenes:
+	router.POST("/upload", hotelController.UploadImage)
+	router.Static("/uploads/img/hotels", "./uploads/img/hotels")
 
 
-	//Hotels
-	router.GET("/hotels",hotelControler.GetHotels)
-	router.POST("/hotels",hotelControler.InsertHotel)
-
-	//Amenities
-	router.POST("/amenities",hotelControler.InsertNewAmenity)
-	router.GET("/amenities",hotelControler.GetAmenities)
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,
 	//se definen las rutas y se especifican los controladores que manejarán las solicitudes HTTP correspondientes.

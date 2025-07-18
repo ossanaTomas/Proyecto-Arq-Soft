@@ -132,7 +132,26 @@ func Login(c *gin.Context){
 
 }
 
+func ChangeRole(c *gin.Context){
+  var user dto.UserDto
 
+ id, err := strconv.Atoi(c.Param("id"))
+if err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+    return
+}
+
+  user.Id=id
+  userDto, er:= service.UserService.ChangeRole(user)
+
+  if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+	//si todo esta OK respondo el status junto con la info del usuario
+	c.JSON(http.StatusOK,userDto)
+
+}
 
 
 

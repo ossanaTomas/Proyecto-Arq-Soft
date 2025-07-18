@@ -1,11 +1,13 @@
 package product
 
 import (
-	"errors"
+	"backend/dto"
 	"backend/model" //importo del model
+	"errors"
+	"strings"
+	e "backend/utils/errors"
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
-	"strings"
 )
 
 var Db *gorm.DB
@@ -63,6 +65,27 @@ func InsertUser(user model.User) (model.User, error) { //recibe un objeto model.
 
 	log.Debug("User Created: ", user.Id)
 	return user, nil
+}
+
+
+func UpdateRole(userUpdate dto.UserDto)(model.User, error){
+
+   var user model.User
+	if err := Db.First(&user, userUpdate.Id).Error; err != nil {
+		return  user, e.NewInternalServerApiError("Usuario no encontrado", err)
+	}
+	
+   if(user.Role=="admin"){
+	user.Role="user"
+   }else{
+	user.Role="admin"
+   }
+
+	if err := Db.Save(&user).Error; err != nil {
+		return model.User{}, err
+	}
+	return user, nil
+
 }
 
 // Aca agrego una breve explicacion de como realizar las operaciones CRUD con GORM

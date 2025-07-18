@@ -10,19 +10,20 @@ import (
 	"backend/model"          //contiene las estructuras de datos que representan los modelos de usuario, dirección, número de teléfono,
 	e "backend/utils/errors" //contiene el paquete errors
 	//"time"
+	"fmt"
 )
 
 type hotelService struct{}
 
-type hotelServiceIterface interface {
+type hotelServiceInterface interface {
 	GetHotels() (dto.HotelsResponseDto, e.ApiError)
 	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
+	UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
+	DeleteHotel(hotelDto dto.HotelDto)(e.ApiError)
 
-	InsertNewAmenity(amenitiDto dto.AmenitiDto)(dto.AmenitiDto, e.ApiError)
-	GetAmenities()(dto.AmenitiesDto,e.ApiError)
 }
 
-var HotelService hotelServiceIterface
+var HotelService hotelServiceInterface
 
 func init() {
 	HotelService = &hotelService{}
@@ -106,42 +107,59 @@ func (s *hotelService) GetHotels() (dto.HotelsResponseDto, e.ApiError) {
 }
 
 
-func(s *hotelService) InsertNewAmenity(amenitiDto dto.AmenitiDto)(dto.AmenitiDto, e.ApiError){
+func(s *hotelService)UpdateHotel( hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError){
   
-	existingAmenity,er := hotelCliente.FindAmenityByName(amenitiDto.Name)
-	if existingAmenity.Id != 0 {
-		return dto.AmenitiDto{}, e.NewBadRequestApiError("Amenity ya existe con ese nombre")
-	}
-	if er != nil{
-        return dto.AmenitiDto{}, e.NewBadRequestApiError(er.Error())
-	}
+	hotel, err := hotelCliente.GetHotelById(hotelDto.Id) 
+    if err != nil {
+        return dto.HotelDto{}, e.NewBadRequestApiError("Hotel no encontrado")
+    }
 
-	var amenity model.Ameniti
-	amenity.Name = amenitiDto.Name
-	amenity.Description = amenitiDto.Description
-
-	amenity, err := hotelCliente.InsertAmenity(amenity)
-	if err != nil {
-		return dto.AmenitiDto{}, e.NewBadRequestApiError(err.Error())
+	hotel.Name= hotelDto.Name
+	hotel.Description=hotelDto.Description
+	hotel.Rooms=hotelDto.Rooms
+	
+	var imagenesModel model.Imagenes
+	for _, imagen := range hotelDto.Imagenes {
+		imagenModel := model.Imagen{
+			Url: imagen.Url,
+		}
+	 imagenesModel = append(imagenesModel, imagenModel)
 	}
+	hotel.Imagenes = imagenesModel
 
-	return amenitiDto, nil
+
+	 err = hotelCliente.UpdateAmenitiesForHotel(hotelDto, hotelDto.Amenities)
+		if err != nil {
+			fmt.Printf("el error es: %+v\n", err)
+			return dto.HotelDto{}, e.NewBadRequestApiError("no se pudieron actualizar las amenities")
+		}
+
+	
+    // Guardamos hotel actualizado
+    updatedHotel, err := hotelCliente.UpdateHotel(hotel)
+    if err != nil {
+        return dto.HotelDto{}, e.NewBadRequestApiError("No se pudo actualizar hotel")
+    }
+
+    hotelDto.Id = updatedHotel.Id
+    return hotelDto, nil
 }
 
 
-func(s *hotelService) GetAmenities()(dto.AmenitiesDto,e.ApiError){
-    
-	var amenitiesDto dto.AmenitiesDto
-	var amenities model.Amenities =hotelCliente.GetAmenities()
-  
-	for _, ameniti := range amenities{
-	 var amenitiDto dto.AmenitiDto
-	 amenitiDto.Id=ameniti.Id
-	 amenitiDto.Name=ameniti.Name
-	 amenitiDto.Description=ameniti.Description
 
-	 amenitiesDto =append(amenitiesDto,amenitiDto)
+
+func (s *hotelService) DeleteHotel(hotelDto dto.HotelDto) e.ApiError {
+	hotel, err := hotelCliente.GetHotelById(hotelDto.Id)
+	if err != nil {
+		return e.NewBadRequestApiError("Hotel no encontrado")
 	}
-  
-	return amenitiesDto, nil
+	if err := hotelCliente.DeleteAmenitiesForHotel(hotelDto); err != nil {
+		return e.NewInternalServerApiError("No se pudieron eliminar las amenities", err)
+	}
+
+	if err := hotelCliente.DeleteHotel(hotel); err != nil {
+		return e.NewInternalServerApiError("No se pudo eliminar el hotel", err)
+	}
+
+	return nil
 }

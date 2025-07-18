@@ -4,7 +4,9 @@ import (
 	"backend/dto"
     service "backend/services"
 	"net/http"
-	 //"strconv"
+	"fmt"
+	"time"
+	 "strconv"
 	"github.com/gin-gonic/gin"
     log "github.com/sirupsen/logrus"
 )
@@ -48,37 +50,63 @@ func InsertHotel(c *gin.Context){
 }
 
 
-func InsertNewAmenity(c *gin.Context){
-	 var amenitiDto dto.AmenitiDto
-	 err := c.BindJSON(& amenitiDto) 
-	
-	if err != nil {
+func UpdateHotel(c *gin.Context){
+	idParam, _ := strconv.Atoi(c.Param("id"))
+	var hotelDto dto.HotelDto
+
+	err := c.BindJSON(&hotelDto)
+		if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-  
-    amenitiDto,er := service.HotelService.InsertNewAmenity(amenitiDto)
+     
+	hotelDto.Id=idParam
+	hotelDto, er := service.HotelService.UpdateHotel(hotelDto)
 
-	if er != nil {
+		if er != nil {
 		c.JSON(er.Status(), er)
 		return
 	}
 	
-	c.JSON(http.StatusCreated, amenitiDto)
+	c.JSON(http.StatusOK, hotelDto)
 }
 
 
-
-func GetAmenities(c *gin.Context){
-	var amenitiesDto dto.AmenitiesDto 
-	amenitiesDto, er := service.HotelService.GetAmenities()
-
-	if er != nil {
-		c.JSON(er.Status(), er)
+func DeleteHotel(c *gin.Context) {
+	idParamStr := c.Param("id")
+	idParam, err := strconv.Atoi(idParamStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return
 	}
-	c.JSON(http.StatusOK, amenitiesDto)
+	hotelDto := dto.HotelDto{Id: idParam}
+	if err := service.HotelService.DeleteHotel(hotelDto); err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "hotel eliminado exitosamente"})
 }
+
+
+func UploadImage(c *gin.Context) {
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No se pudo leer el archivo"})
+		return
+	}
+
+	// Ruta donde guardar (creá esta carpeta si no existe)
+	filename := fmt.Sprintf("uploads/img/hotels/%d_%s", time.Now().Unix(), file.Filename)
+	err = c.SaveUploadedFile(file, filename)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo guardar la imagen"})
+		return
+	}
+	// Devolvés la URL relativa (que se guarda en el backend)
+	c.JSON(http.StatusOK, gin.H{"url": "/" + filename})
+}
+
+
 
 

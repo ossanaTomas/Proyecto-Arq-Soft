@@ -25,6 +25,7 @@ type userServiceInterface interface {
 	InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
 	//AddUserTelephone(telephoneDto dto.TelephoneDto) (dto.UserDetailDto, e.ApiError)
 	Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiError)
+	ChangeRole(userDto dto.UserDto)(dto.UserDto, e.ApiError)
 }
 
 //Como la siguiente variable esta en mayuscula es accesible desde otros lados, por lo tanot
@@ -91,7 +92,6 @@ func (s *userService) GetUsers() (dto.UsersDto, e.ApiError) {
 		userDto.Name = user.Name
 		userDto.LastName = user.LastName
 		userDto.UserName = user.UserName
-		userDto.Password = user.Password
 		userDto.Email = user.Email
 		userDto.Id = user.Id
 		userDto.Role = user.Role
@@ -186,6 +186,33 @@ func (s *userService) Login(loginDto dto.LoginDto) (dto.LoginResponseDTO, e.ApiE
 	}
 
 
+	func (s *userService) ChangeRole(userDto dto.UserDto)(dto.UserDto, e.ApiError){
+       
+      var userRespose dto.UserDto
+	   user,err:= userCliente.UpdateRole(userDto)
+ 
+	   if err!= nil{
+		return userDto,e.NewBadRequestApiError("Error al actualizar el rol")
+	   }
+
+			userRespose.Name = user.Name
+		userRespose.LastName = user.LastName
+        userRespose.UserName = user.UserName
+		userRespose.Email = user.Email
+		userRespose.Id = user.Id
+		userRespose.Role = user.Role
+		userRespose.Address = dto.AddressDto{
+			Id:      user.Address.Id,
+			UserId:  user.Address.UserId,
+			Street:  user.Address.Street,
+			Number:  user.Address.Number,
+			City:    user.Address.City,
+			Country: user.Address.Country,
+		}  
+
+		return userRespose, nil
+	   
+	}
 
 
 
