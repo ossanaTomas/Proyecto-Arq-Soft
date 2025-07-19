@@ -1,0 +1,21 @@
+.buscadorContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputText {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 220px;
+}
+
+.selectOrden {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 180px;
+}

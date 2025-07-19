@@ -18,9 +18,9 @@ function App() {
           <Route path='/' element={<Home/>} />
           <Route path='/login' element={<Login/>} />
           <Route path='/register' element={<Register/>} />
-   
           <Route path='/hoteles/insertar' element={<InsertarHotels/>} />
-          <Route path='/*' element={ <h1>Error 404</h1> /*<Navigate to='/' />*/} />
+          <Route path='/hotel/reservar'  />
+          <Route path='/*' element={ <h1>Error 404 - Hotel: Aqui no es :(</h1> /*<Navigate to='/' />*/} />
         </Routes>
       </Router>
     </>

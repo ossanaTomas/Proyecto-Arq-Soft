@@ -1,35 +1,27 @@
 import React,{useState} from "react";
+import styles from './Buscador.module.css'
 
 
-
-function Buscador(){
-
-const[search,setSearch]=useState('')
-const[sort,setSort]=useState('')
-
-
-const handleChange =async(e)=>{
-
-}
-
-    return(
-  <div>
-    <div>
-    <form  >
-        <input type="text" placeholder="Buscar.." onChange={e => setSearch(e.target.value)} />
-        
-    </form>
+function Buscador({ onSearchChange, onSortChange }) {
+  return (
+    <div className={styles.buscadorContainer}>
+      <input
+        type="text"
+        placeholder="Buscar por nombre..."
+        className={styles.inputText}
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
+      <select
+        className={styles.selectOrden}
+        onChange={(e) => onSortChange(e.target.value)}
+      >
+        <option value="">Ordenar por...</option>
+        <option value="nombre_asc">Nombre A-Z</option>
+        <option value="nombre_desc">Nombre Z-A</option>
+        <option value="creacion">Fecha de creación</option>
+      </select>
     </div>
-    <div>
-        <select onChange={handleChange}>
-      <option value="opcion1">name</option>
-      <option value="opcion2">apellido</option>
-      <option value="opcion3">gustos</option>
-    </select>
-    </div>
- </div>
-    )
-
+  );
 }
 
 export default Buscador;

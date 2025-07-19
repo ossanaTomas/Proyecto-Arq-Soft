@@ -18,21 +18,21 @@ const imagenUrl =
 const truncateWords = (text, limit) => {
   const words = text.split(" ");
   if (words.length <= limit) return text;
-  return words.slice(0, limit).join(" ") + "...";
+  return words.slice(0, limit).join(" ") + " . . . Click para ver mas";
 };
 
  
 
   return (
     <div className={styles.cardContainer} onClick={onClick}>
-      <div className={styles.cardContent} >
-      <img
-          className={styles.imagenContainer}
+        <img className={styles.imagenContainer}
           src={imagenUrl}
           alt={`Imagen de ${name}`}
         />
+      <div className={styles.cardContent} >
+       <div className={styles.infohotel}>
         <h3 className={styles.hotelName}>{name}</h3>
-        <p className={styles.descripcion}>{truncateWords(description,20)}</p>
+        <p className={styles.descripcion}>{truncateWords(description,28)}</p>
          <ul className={styles.listaAmenities}>
           {(Array.isArray(amenities) ? amenities : [])
             .slice(0, 4) //limito a 4 la cantidad de amenities que muestro
@@ -42,6 +42,7 @@ const truncateWords = (text, limit) => {
               </li>
             ))}
         </ul>
+        </div>
       </div>
     </div>
   );

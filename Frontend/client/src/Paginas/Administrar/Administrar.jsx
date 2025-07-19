@@ -36,7 +36,6 @@ async function deleteAmenity(id) {
     return res.ok;
 }
 
-
 async function gethotels() {
     return await fetch('http://localhost:8090/hotels', {
         method: "GET",
@@ -55,13 +54,7 @@ async function getusers() {
     }).then(response => response.json());
 }
 
-
-
-
-
-
 function AdminDashboard() {
-
     const [active, setActive] = useState({ section: 'Hoteles', action: 'Ver todos' });
     const [hotels, setHotels] = useState([]);
     const [selectedHotel, setSelectedHotel] = useState(null)
@@ -76,70 +69,62 @@ function AdminDashboard() {
     const [userToUpdateRole, setUserToUpdateRole] = useState(null);
     const [showRoleModal, setShowRoleModal] = useState(false);
 
-
-
     const [showModal, setShowModal] = useState(false);
     const [amenityToDelete, setAmenityToDelete] = useState(null);
+    const [showSearchBar, setshowSearchBar] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
 
-    { console.log("Hoteles:", hotels) }
     useEffect(() => {
-        if (active.section === 'Hoteles' && active.action === 'Ver todos') {
+        if (active.section === 'Hoteles' && active.action.includes('Ver')) {
             gethotels().then(setHotels);
         }
     }, [active]);
 
-
-    { console.log("Ameniteis:", amenities) }
     useEffect(() => {
         if (active.section === 'Amenities' && active.action === 'Gestionar') {
             getamenities().then(setAmenities);
         }
     }, [active]);
 
-    { console.log("Usuarios:", users) }
     useEffect(() => {
-        if (active.section === 'Usuarios' && active.action === 'Ver todos') {
+        if (active.section === 'Usuarios' && active.action.includes('Ver')) {
             getusers().then(setUsers);
         }
     }, [active]);
 
+    useEffect(() => {
+        if (selectedHotel || active.action === 'Agregar nuevo') {
+            setshowSearchBar(false);
+        } else {
+            setshowSearchBar(true);
+        }
+    }, [selectedHotel, active]);
 
+    //esto no esta andando
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // Si hay un usuario seleccionado y el clic fue fuera del contenedor de usuarios..
-            if (
-                selectedUser &&
-                usersContainerRef.current &&
-                !usersContainerRef.current.contains(event.target)
-            ) {
-                setSelectedUser(null); // Deseleccionamos
+            if (selectedUser && usersContainerRef.current && !usersContainerRef.current.contains(event.target)) {
+                setSelectedUser(null);
             }
         };
-
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
     }, [selectedUser]);
-
 
 
     async function updateUserRole(userId) {
         try {
             const res = await fetch(`http://localhost:8090/user/role/${userId}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    // Si usás token:
-                    // "Authorization": "Bearer tu_token"
-                }
+                headers: { "Content-Type": "application/json" }
             });
 
             if (res.ok) {
                 const updatedUser = await res.json();
-                // Actualizamos lista local de usuarios
-                setUsers((prev) =>
-                    prev.map((u) => (u.id === updatedUser.id ? updatedUser : u))
-                );
+                setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
                 setSelectedUser(null);
                 window.alert("Modificacion Exitosa!")
             } else {
@@ -153,157 +138,184 @@ function AdminDashboard() {
         }
     }
 
+    //defino un elemento render, que va a contener todos los hoteles, usuarios, amenities etc a renderizar
+    let renderedData = [];
 
+    // dependiendoi de la seccion que esta activa, es lo que mostramos
+    if (active.section === 'Hoteles' && active.action.includes('Ver')) {
+        //render en esta seccion son los datos de los hoteles, para luego mutarlos con filter y sort
+        renderedData = [...hotels]
+            //h es cada hotel del array
+            .filter(h => h.name.toLowerCase().includes(searchTerm.toLowerCase())) //buscamos si el nombre incluye el termino ingresado
+            .sort((a, b) => {
+                if (sortOption === 'nombre_asc') return a.name.localeCompare(b.name);
+                if (sortOption === 'nombre_desc') return b.name.localeCompare(a.name);
+                return 0;
+            });
 
-
-
-
+    }
+    if (active.section === 'Usuarios' && active.action.includes('Ver')) {
+        renderedData = [...users]
+            .filter(u => u.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            .sort((a, b) => {
+                if (sortOption === 'nombre_asc') return a.name.localeCompare(b.name);
+                if (sortOption === 'nombre_desc') return b.name.localeCompare(a.name);
+                return 0;
+            });
+    }
+    if (active.section === 'Amenities' && active.action === 'Gestionar') {
+        renderedData = [...amenities]
+            .filter(a => a.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            .sort((a, b) => {
+                if (sortOption === 'nombre_asc') return a.name.localeCompare(b.name);
+                if (sortOption === 'nombre_desc') return b.name.localeCompare(a.name);
+                return 0;
+            });
+    }
 
     return (
-
         <div className={styles.container}>
             <MenuBar />
+
+            {showSearchBar === true &&
+                <div className={styles.searchBarWrapper}>
+                    <Buscador
+                        onSearchChange={setSearchTerm}
+                        onSortChange={setSortOption}
+                    />
+                </div>}
             <div className={styles.dashboardLayout}>
-                {/*dependiendo de la seleccion */}
                 <AdminSidebar onSelect={(section, action) => {
-                    console.log("Seleccionaste:", section, action);
-                    setActive({ section, action })
-                    setSelectedHotel(null)
+                    setActive({ section, action });
+                    setSelectedHotel(null);
                 }} />
-              <Buscador></Buscador>
-                <div className={styles.dashboardContent} >
-
-                    {/*Es el contenido que se debe renderizar y */}
 
 
-                    {active.section === 'Amenities' && active.action === 'Gestionar' && showNewAmeniti === false &&
-                        <div className={styles.headerRight}>
-                            <button className={styles.subimiButton} onClick={() => setShowNewAmeniti(true)}> Crear nueva amenity</button>
-                        </div>
 
-                    }
+                <div className={styles.dashboardContent}>
+                    <div className={styles.mainContent}>
 
-                    {active.section === 'Hoteles' && active.action === 'Agregar nuevo' && <FormCrearHotel />}
-                    {active.section === 'Hoteles' && active.action === 'Ver todos y editar' && (
-                        selectedHotel ? (
-                            <HotelDetails hotel={selectedHotel} onBack={() => setSelectedHotel(null)} />
-                        ) : (
-                            <div className={styles.hotelGrid}>
-                                {hotels.map((hotel) => (
-                                    <CardHotel
-                                        key={hotel.id}
-                                        hotel={hotel}
-                                        onClick={() => {
-                                            console.log("seleccionaste el hotel", hotel);
-                                            setSelectedHotel(hotel);
-                                        }}
-                                    />
-                                ))}
+                        {active.section === 'Hoteles' && active.action === 'Agregar nuevo' && <FormCrearHotel />}
+                        {active.section === 'Hoteles' && active.action.includes('Ver') && (
+                            selectedHotel ? (
+
+                                <HotelDetails hotel={selectedHotel} onBack={() => setSelectedHotel(null)} />
+                            ) : (
+                                <div className={styles.hotelGrid}>
+                                    {renderedData.map((hotel) => (
+                                        <CardHotel
+                                            key={hotel.id}
+                                            hotel={hotel}
+                                            onClick={() => setSelectedHotel(hotel)}
+                                        />
+                                    ))}
+                                </div>
+                            )
+                        )}
+
+                        {active.section === 'Amenities' && active.action === 'Gestionar' && showNewAmeniti === false && (
+                            <div className={styles.headerRight}>
+                                <button className={styles.subimiButton} onClick={() => setShowNewAmeniti(true)}>
+                                    Crear nueva amenity
+                                </button>
                             </div>
-                        )
-                    )
-                    }
+                        )}
 
-                    {active.section === 'Amenities' && active.action === 'Gestionar' && showNewAmeniti === false && (
-                        <>
-                            <div className={styles.hotelGrid}>
-                                {amenities.map((am) => (
-                                    <AmenitiesGestion
-                                        key={am.id}
-                                        ameniti={am}
-                                        isEditing={selectedAmenities?.id === am.id}
-                                        onClick={() => setSelectedAmenities(am)}
-                                        onSave={async (updatedAmenity) => {
-                                            const success = await updateAmenity(updatedAmenity);
+                        {active.section === 'Amenities' && active.action === 'Gestionar' && showNewAmeniti === false && (
+                            <>
+                                <div className={styles.hotelGrid}>
+                                    {renderedData.map((am) => (
+                                        <AmenitiesGestion
+                                            key={am.id}
+                                            ameniti={am}
+                                            isEditing={selectedAmenities?.id === am.id}
+                                            onClick={() => setSelectedAmenities(am)}
+                                            onSave={async (updatedAmenity) => {
+                                                const success = await updateAmenity(updatedAmenity);
+                                                if (success) {
+                                                    const updatedList = amenities.map(a => a.id === updatedAmenity.id ? updatedAmenity : a);
+                                                    setAmenities(updatedList);
+                                                    setSelectedAmenities(null);
+                                                }
+                                            }}
+                                            onDelete={() => {
+                                                setShowModal(true);
+                                                setAmenityToDelete(am);
+                                            }}
+                                            onCancel={() => setSelectedAmenities(null)}
+                                        />
+                                    ))}
+                                </div>
+
+                                {showModal && amenityToDelete && (
+                                    <Modal
+                                        title={`¿Eliminar "${amenityToDelete.name}"?`}
+                                        onConfirm={async () => {
+                                            const success = await deleteAmenity(amenityToDelete.id);
                                             if (success) {
-                                                const updatedList = amenities.map(a => a.id === updatedAmenity.id ? updatedAmenity : a);
-                                                setAmenities(updatedList);
+                                                setAmenities(amenities.filter(a => a.id !== amenityToDelete.id));
                                                 setSelectedAmenities(null);
+                                                setShowModal(false);
+                                                setAmenityToDelete(null);
                                             }
                                         }}
-                                        onDelete={() => {
-                                            setShowModal(true);
-                                            setAmenityToDelete(am);
+                                        onCancel={() => {
+                                            setShowModal(false);
+                                            setAmenityToDelete(null);
                                         }}
-                                        onCancel={() => setSelectedAmenities(null)}
+                                    >
+                                        Esta acción no se puede deshacer.
+                                    </Modal>
+                                )}
+                            </>
+                        )}
+
+                        {showNewAmeniti && (
+                            <FormCreateAmeniti
+                                onClose={() => setShowNewAmeniti(false)}
+                                onCreated={(newAmenity) => {
+                                    setAmenities(prev => [...prev, newAmenity]);
+                                    setShowNewAmeniti(false);
+                                }}
+                            />
+                        )}
+
+                        {active.section === 'Usuarios' && active.action === 'Ver todos' && (
+                            <div className={styles.hotelGrid}>
+                                {renderedData.map((user) => (
+                                    <CardUser
+                                        key={user.id}
+                                        user={user}
+                                        moreInfo={selectedUser?.id === user.id}
+                                        onClick={() => setSelectedUser(user)}
+                                        onRequestRoleChange={(u) => {
+                                            setUserToUpdateRole(u);
+                                            setShowRoleModal(true);
+                                        }}
                                     />
                                 ))}
                             </div>
+                        )}
 
-                            {showModal && amenityToDelete && (
-                                <Modal
-                                    title={`¿Eliminar "${amenityToDelete.name}"?`}
-                                    onConfirm={async () => {
-                                        const success = await deleteAmenity(amenityToDelete.id);
-                                        if (success) {
-                                            setAmenities(amenities.filter(a => a.id !== amenityToDelete.id));
-                                            setSelectedAmenities(null);
-                                            setShowModal(false);
-                                            setAmenityToDelete(null);
-                                        }
-                                    }}
-                                    onCancel={() => {
-                                        setShowModal(false);
-                                        setAmenityToDelete(null);
-                                    }}
-                                >
-                                    Esta acción no se puede deshacer.
-                                </Modal>
-                            )}
-                        </>
-                    )}
-                    {showNewAmeniti && (
-                        <FormCreateAmeniti
-                            onClose={() => setShowNewAmeniti(false)}
-                            onCreated={(newAmenity) => {
-                                setAmenities(prev => [...prev, newAmenity]);
-                                setShowNewAmeniti(false);
-                            }}
-                        />
-                    )}
-                    {active.section === 'Usuarios' && active.action === 'Ver todos' &&
-
-                        <div className={styles.hotelGrid} >
-                            {users.map((user) => (
-                                <CardUser
-                                    user={user}
-                                    moreInfo={selectedUser?.id === user.id}
-                                    onClick={() => setSelectedUser(user)}
-                                    onRequestRoleChange={(u) => {
-                                        setUserToUpdateRole(u);
-                                        setShowRoleModal(true);
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    }
-                    {showRoleModal && userToUpdateRole && (
-                        <Modal
-                            title="Advertencia"
-                            onConfirm={() => updateUserRole(userToUpdateRole.id)}
-                            onCancel={() => {
-                                setShowRoleModal(false);
-                                setUserToUpdateRole(null);
-                            }}
-                            confirmText="Confirmar"
-                            cancelText="Cancelar"
-                        >
-                            Está cambiando el rol del usuario <strong>{userToUpdateRole.name}</strong>.
-                            ¿Desea continuar?
-                        </Modal>
-                    )}
-
-
+                        {showRoleModal && userToUpdateRole && (
+                            <Modal
+                                title="Advertencia"
+                                onConfirm={() => updateUserRole(userToUpdateRole.id)}
+                                onCancel={() => {
+                                    setShowRoleModal(false);
+                                    setUserToUpdateRole(null);
+                                }}
+                                confirmText="Confirmar"
+                                cancelText="Cancelar"
+                            >
+                                Está cambiando el rol del usuario <strong>{userToUpdateRole.name}</strong>. ¿Desea continuar?
+                            </Modal>
+                        )}
+                    </div>
                 </div>
             </div>
-
         </div>
-
     );
 }
 
 export default AdminDashboard;
-
-
-
-

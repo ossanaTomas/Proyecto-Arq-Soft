@@ -6,10 +6,19 @@
   
   .main {
     margin: 200px;
-    max-width: 600px;
+    max-width: 70%;
     margin: var(--padding-large) auto;
     padding: var(--padding-medium);
     background: var(--white);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
   }
+
+  .cardGrid{
+    margin-top: 8%;
+  }
+
+   .cardGrid2{
+
+  }
+ 
