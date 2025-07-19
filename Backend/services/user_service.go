@@ -119,6 +119,7 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
+
 func (s *userService) InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) {
 
 	var user model.User

@@ -2,13 +2,17 @@ package db
 
 import (
 	addressClient "backend/clients-DAO/address"
+	amenitiClient "backend/clients-DAO/ameniti"
 	hotelClient "backend/clients-DAO/hotel"
-	amenitiClient"backend/clients-DAO/ameniti"
+	reservClient "backend/clients-DAO/reserv"
+	
+
 	//telephoneClient "mvc-go/clients/telephone"
 	userClient "backend/clients-DAO/user"
-				"backend/model"
-				"github.com/jinzhu/gorm"
-				_ "github.com/jinzhu/gorm/dialects/mysql"
+	"backend/model"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -45,6 +49,7 @@ func init() { // init() que se ejecuta durante la inicialización del paquete.
 	addressClient.Db = db
 	hotelClient.Db=db
 	amenitiClient.Db=db
+	reservClient.Db=db
 //	telephoneClient.Db = db
 
 

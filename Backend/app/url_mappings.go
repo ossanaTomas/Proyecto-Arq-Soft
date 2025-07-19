@@ -6,6 +6,7 @@ package app
 import (
 	amenitiController "backend/controllers/ameniti"
 	hotelController "backend/controllers/hotel"
+	reservController "backend/controllers/reserv"
 	userController "backend/controllers/user"
 
 	//importa el paquete "userController" del directorio "mvc-go/controllers/user".
@@ -25,13 +26,9 @@ func mapUrls() {
 	router.GET("/user", userController.GetUsers)
 	router.POST("/user", userController.UserInsert)
 	router.PUT("/user/role/:id", userController.ChangeRole)
-	
-	//router.POST("/user/:id/telephone", userController.AddUserTelephone)
-
     //Login Mapping
 	router.POST("/login",userController.Login)
 
-	
 	//Hotels:
 	router.GET("/hotels",hotelController.GetHotels)
 	router.POST("/hotels",hotelController.InsertHotel)
@@ -48,6 +45,12 @@ func mapUrls() {
 	router.POST("/upload", hotelController.UploadImage)
 	router.Static("/uploads/img/hotels", "./uploads/img/hotels")
 
+	//Rerserva:
+	router.POST("/reserv/check",reservController.CheckDisponibility)
+	router.POST("/reserv",reservController.InsertRerserv)
+	router.DELETE("/reserv/:id", reservController.DeleteReserv)
+    router.PUT("/reserv/:id", reservController.UpdateReserv)
+	router.GET("/reserv",reservController.GetReservs)
 
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,
@@ -67,8 +70,8 @@ func mapUrls() {
 
 //ir a controler/user/user_controler.go
 
-/*Dentro de los controladores, encontrarás las funciones que se
+/*Dentro de los controladores,  funciones que se
   encargan de manejar las solicitudes entrantes relacionadas con los usuarios,
   como obtener un usuario por ID, obtener todos los usuarios,
-  insertar un nuevo usuario, agregar un número de teléfono a un usuario, entre otras acciones.
+  insertar un nuevo usuario etc..
 */
