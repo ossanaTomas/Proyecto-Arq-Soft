@@ -37,6 +37,31 @@ func GetHotelById(id int) (model.Hotel, error) {
 	return hotel, nil
 }
 
+
+
+func GetHotelsById(ids []int) (model.Hotels, error) {
+	var hotels model.Hotels
+
+	if len(ids) == 0 {
+		return model.Hotels{}, errors.New("la lista de IDs está vacía")
+	}
+
+	err := Db.Preload("Amenities").
+		Preload("Imagenes").
+		Where("id IN (?)", ids).
+		Find(&hotels).Error
+
+	if err != nil {
+		log.Error("Error al obtener hoteles por IDs:", err)
+		return model.Hotels{}, err
+	}
+
+	return hotels, nil
+}
+
+
+
+
 func InsertHotel(hotel model.Hotel) (model.Hotel, error) {
 
 	fmt.Printf("%+v\n", hotel)

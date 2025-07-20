@@ -47,6 +47,88 @@ func CheckAvailability(dtoConsulta dto.CheckAvailabilityDto) (dto.CheckAvailabil
 	return dtoConsulta, nil
 }
 
+/*
+func SearchAvaliabity(searchAvaliabity dto.RequesthHotelsAvaibylityDto)(model.Hotels,error){
+
+    
+}*/
+
+
+func GetHotelesDisponibles(req dto.RequesthHotelsAvaibylityDto) ([]int, error) {
+	var hotelesDisponibles []int
+
+	// Traer todos los hoteles
+	var hoteles []model.Hotel
+	if err := Db.Find(&hoteles).Error; err != nil {
+		return nil, errors.New("error al traer los hoteles")
+	}
+
+	// Para cada hotel, verificar disponibilidad
+	for _, hotel := range hoteles {
+		var totalReservadas int
+        fmt.Println("aca llega, hotel id:", hotel.Id)
+		// Suma de habitaciones reservadas en ese rango
+		row := Db.Model(&model.Reserv{}).
+	Select("COALESCE(SUM(hotel_rooms), 0)").
+	Where("hotel_id = ? AND date_start <= ? AND date_finish >= ?", hotel.Id, req.DateFinish, req.DateStart).
+	Row()
+
+err := row.Scan(&totalReservadas)
+        fmt.Println("reservas de hotel:", hotel.Id,"son", totalReservadas )
+		if err != nil {
+			return nil, errors.New("error al consultar reservas para hotel")
+		}
+
+		if int(totalReservadas)+req.Personas <= hotel.Rooms {
+			hotelesDisponibles = append(hotelesDisponibles, int(hotel.Id))
+		}
+	}
+	
+    fmt.Println(hotelesDisponibles)
+	return hotelesDisponibles, nil
+}
+
+
+
+
+func GetAllReservsByHotel(id int)(model.Reservs,error){
+	var reservs model.Reservs
+	result:=Db.Where("hotel_id= ?", id).Find(&reservs)
+	if result.Error!=nil{
+		return reservs, errors.New("error al encontrar las reservas  historicas de este hotel")
+	}
+	return reservs,nil
+}
+
+func GetFutureReservsByHotel(reservDto dto.ReservDto)(model.Reservs,error){
+	var reservs model.Reservs
+	result:=Db.Where("hotel_id=? and AND date_finish >= ?", reservDto.HotelId,reservDto.DateFinish ).Find(&reservs)
+	if result.Error!=nil{
+		return reservs, errors.New("error al encontrar las reservas presentes de este hotel")
+	}
+	return reservs,nil
+}
+
+func GetAllReservsByUser(id int)(model.Reservs,error){
+	var reservs model.Reservs
+	result:=Db.Where("user_id= ?", id).Find(&reservs)
+	if result.Error!=nil{
+		return reservs, errors.New("error al encontrar las reservas historicas de este usuario")
+	}
+	return reservs,nil
+}
+
+func GetFuturesReservsByUser(id int)(model.Reservs,error){
+	var reservs model.Reservs
+	result:=Db.Where("user_id= ?", id).Find(&reservs)
+	if result.Error!=nil{
+		return reservs, errors.New("error al encontrar las reservas de este usuario")
+	}
+	return reservs,nil
+}
+
+
+
 func GetReservs()(model.Reservs,error){
   	var reservs model.Reservs
 	result:=Db.Find(&reservs)
@@ -55,6 +137,7 @@ func GetReservs()(model.Reservs,error){
 	}
 	return reservs, nil
 }
+
 
 
 func InsertReserv(reservData model.Reserv)(model.Reserv, error){

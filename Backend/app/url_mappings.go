@@ -46,11 +46,12 @@ func mapUrls() {
 	router.Static("/uploads/img/hotels", "./uploads/img/hotels")
 
 	//Rerserva:
-	router.POST("/reserv/check",reservController.CheckDisponibility)
+	router.POST("/reserv/check",reservController.CheckDisponibility) //esta no esta del todo bien, deberia ser un GET
 	router.POST("/reserv",reservController.InsertRerserv)
 	router.DELETE("/reserv/:id", reservController.DeleteReserv)
     router.PUT("/reserv/:id", reservController.UpdateReserv)
 	router.GET("/reserv",reservController.GetReservs)
+	router.GET("/reserv/disponibility", reservController.SearchAvaliabity)
 
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,

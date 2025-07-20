@@ -5,6 +5,7 @@ import (
     service "backend/services"
 	"net/http"
 	"fmt"
+	e "backend/utils/errors"
 	//"time"
 	 "strconv"
 	"github.com/gin-gonic/gin"
@@ -111,3 +112,55 @@ func GetReservs(c *gin.Context){
 	c.JSON(http.StatusOK, reservs)
 }
 
+
+func GetReservById(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, e.NewBadRequestApiError("ID inválido"))
+		return
+	}
+
+	reservDto, er := service.ReservService.GetReservById(id)
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+
+	c.JSON(http.StatusOK, reservDto)
+}
+
+func GetReservaByHotel(c *gin.Context){
+		idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, e.NewBadRequestApiError("ID inválido"))
+		return
+	}
+	reservDto, er := service.ReservService.GetAllReservByHotel(id)
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+
+	c.JSON(http.StatusOK, reservDto)
+}
+
+
+func SearchAvaliabity(c *gin.Context){
+  
+	var searchAvaliabity dto.RequesthHotelsAvaibylityDto
+
+	if err := c.ShouldBindQuery(&searchAvaliabity); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Parámetros inválidos: " + err.Error()})
+		return
+	}
+
+		result, err := service.ReservService.SearchAvaliabity(searchAvaliabity)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error interno"})
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}

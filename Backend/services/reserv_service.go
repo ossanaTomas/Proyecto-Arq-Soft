@@ -4,6 +4,7 @@ import (
 	//addressCliente "mvc-go/clients/address"
 	//telephoneCliente "mvc-go/clients/telephone"
 	reservCliente "backend/clients-DAO/reserv"
+	hotelCliente "backend/clients-DAO/hotel"
 	"backend/model"
 
 	//"mvc-go/clients-DAO/address"
@@ -25,6 +26,9 @@ type reservServiceInterface interface {
 	CheckAvailability(disponibilidadDto dto.CheckAvailabilityDto) (dto.CheckAvailabilityDto,e.ApiError)
 	DeleteReserv(id int)(e.ApiError)
 	UpdateReserv(id int, reservDto dto.ReservDto) (dto.ReservDto, e.ApiError)
+	GetReservById(id int) (dto.ReservDto, e.ApiError)
+	GetAllReservByHotel(id int )(dto.ReservsDto,e.ApiError)
+	SearchAvaliabity( searchAvaliabity dto.RequesthHotelsAvaibylityDto)(dto.ResponseHotelsAvaibylityDtos, e.ApiError)
 	
 }
 
@@ -57,6 +61,31 @@ func (s *reservService)GetReservs()(dto.ReservsDto, e.ApiError){
 	var ReservsDto   dto.ReservsDto
 
 	reservsModel,err:=reservCliente.GetReservs()
+
+	if err!=nil{
+       return ReservsDto, e.NewBadRequestApiError(err.Error())
+	}
+
+	for _ ,reserv := range reservsModel{
+      var reservDto dto.ReservDto
+      reservDto.UserId = reserv.UserId
+	  reservDto.HotelId= reserv.HotelId
+	  reservDto.DateStart=reserv.DateStart
+	  reservDto.DateFinish=reserv.DateFinish
+	  reservDto.DateActual=reserv.CreatedAt
+      reservDto.HotelRooms=reserv.HotelRooms
+	  reservDto.TotalPrice=reserv.TotalPrice
+
+      ReservsDto = append(ReservsDto, reservDto)
+	}
+	return ReservsDto , nil
+}
+
+func (s *reservService)GetAllReservByHotel(id int )(dto.ReservsDto,e.ApiError){
+	var reservsModel model.Reservs
+	var ReservsDto   dto.ReservsDto
+
+	reservsModel,err:=reservCliente.GetAllReservsByHotel(id)
 
 	if err!=nil{
        return ReservsDto, e.NewBadRequestApiError(err.Error())
@@ -188,7 +217,83 @@ func (s *reservService) UpdateReserv(id int, reservDto dto.ReservDto) (dto.Reser
 	return reservDto, nil
 }
 
+func (s *reservService) GetReservById(id int) (dto.ReservDto, e.ApiError) {
+	var reservDto dto.ReservDto
 
+	reservModel, err := reservCliente.FindReservById(id)
+	if err != nil {
+		return reservDto, e.NewNotFoundApiError("Reserva no encontrada")
+	}
+
+	reservDto.UserId = reservModel.UserId
+	reservDto.HotelId = reservModel.HotelId
+	reservDto.DateStart = reservModel.DateStart
+	reservDto.DateFinish = reservModel.DateFinish
+	reservDto.DateActual = reservModel.CreatedAt
+	reservDto.HotelRooms = reservModel.HotelRooms
+	reservDto.TotalPrice = reservModel.TotalPrice
+
+	return reservDto, nil
+}
+
+
+func (s *reservService) SearchAvaliabity(searchAvaliabity dto.RequesthHotelsAvaibylityDto)(dto.ResponseHotelsAvaibylityDtos, e.ApiError){
+
+	var responseHotels dto.ResponseHotelsAvaibylityDtos
+
+
+   //(de personas -> habitaciones)
+   searchAvaliabity.Personas = s.RoomCalculation(searchAvaliabity.Personas)
+    
+   //pregunto por todos los ids de los hoteles que estan disponibles
+   ids, err := reservCliente.GetHotelesDisponibles(searchAvaliabity)
+  if(err!=nil){
+	return   responseHotels, e.NewNotFoundApiError("error en la busqueda de hoteles")
+  }
+
+   //consulto los datos de los hoteles correspondientes a dichos IDs:
+
+   hotels,err := hotelCliente.GetHotelsById(ids)
+
+   
+   for _, hotel := range hotels {
+		var resposeHotel dto.ResponseHotelAvaibylityDto
+		resposeHotel.Id = hotel.Id
+		resposeHotel.Name = hotel.Name
+		resposeHotel.Description=hotel.Description
+		resposeHotel.Rooms = hotel.Rooms
+
+		var amenityDtos []dto.AmenitiDto
+		for _, amenity := range hotel.Amenities {
+			amenityDto := dto.AmenitiDto{
+				Id: amenity.Id,
+				Name:        amenity.Name,
+				Description: amenity.Description,
+			}
+			amenityDtos = append(amenityDtos, amenityDto)
+		}
+		var imagenesDto []dto.ImagenDto
+		for _, imagen := range hotel.Imagenes {
+			imagenDto := dto.ImagenDto{
+				Url: imagen.Url,
+				Id:  imagen.Id,
+			}
+			imagenesDto = append(imagenesDto, imagenDto)
+		}
+
+		resposeHotel.Imagenes = imagenesDto
+		resposeHotel.Amenities = amenityDtos
+
+		responseHotels = append(responseHotels, resposeHotel)
+	}
+
+	return responseHotels,nil
+}
+
+
+
+
+//funciones extra: 
 
 
 func DiasEntre(fechaInicio, fechaFin time.Time) int {
@@ -216,3 +321,4 @@ func (s *reservService) RoomCalculation (personas int)(habitaciones int){
 	}
 	return habitaciones
 }
+
