@@ -40,7 +40,9 @@ func CheckDisponibility(c *gin.Context){
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-    fmt.Println(dispoInfoDto.HotelId)
+    fmt.Println("el id que imprimo es:", dispoInfoDto.HotelId)
+
+
 
 	dispoInfoDto,er := service.ReservService.CheckAvailability(dispoInfoDto)
 

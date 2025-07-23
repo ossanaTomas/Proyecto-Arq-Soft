@@ -40,7 +40,7 @@ func GetUserById(c *gin.Context) { //esta es la declaración de una función lla
 	//contexto de Gin.
 	
 	id, _ := strconv.Atoi(c.Param("id")) //Esta línea convierte el parámetro "id" en el contexto de Gin en un entero
-	var userDto dto.UserDetailDto        //Se declara una variable userDto de tipo dto.UserDetailDto
+	var userDto dto.UserDto       //Se declara una variable userDto de tipo dto.UserDetailDto
 
 	userDto, err := service.UserService.GetUserById(id) //se llama a la función GetUserById del servicio UserService,
 	// pasando el ID del usuario como argumento.

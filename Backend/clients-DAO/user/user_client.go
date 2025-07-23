@@ -15,7 +15,7 @@ var Db *gorm.DB
 func GetUserById(id int) model.User { // funcion que recibe Id y devuleve un objeto model.user
 	var user model.User //declaro varibale user del tipo model.user
 
-	Db.Where("id = ?", id).Preload("Address").Preload("Telephones").First(&user)
+	Db.Where("id = ?", id).Preload("Address").First(&user)
 
 	//Utiliza Db para realizar una consulta en la base de datos utilizando el método Where, Preload y
 	//First de gorm.DB. La consulta busca un usuario con el ID especificado y carga sus relaciones

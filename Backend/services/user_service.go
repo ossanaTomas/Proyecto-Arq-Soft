@@ -19,7 +19,7 @@ type userServiceInterface interface {
 	/*userServiceInterface que contiene los métodos que deben ser
 	  implementados por el servicio de usuario. La interfaz userServiceInterface especifica los métodos
 	que deben estar presentes en cualquier implementación del servicio de usuario*/
-	GetUserById(id int) (dto.UserDetailDto, e.ApiError)
+	GetUserById(id int) (dto.UserDto, e.ApiError)
 	//GetUserByMail(id int) (dto.UserDetailDto, e.ApiError)
 	GetUsers() (dto.UsersDto, e.ApiError) 
 	InsertUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
@@ -39,18 +39,20 @@ func init() {
 	//del servicio que se utilice.
 }
 
-func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) {
+func (s *userService) GetUserById(id int) (dto.UserDto, e.ApiError) {
 	//implementacion del metodo getuserbyid
 	//El método recibe un ID de usuario como parámetro y devuelve un dto.UserDetailDto que contiene los detalles del
 	//usuario solicitado. También puede devolver un error de tipo e.ApiError en caso de que el usuario no sea encontrado.
 
 	var user model.User = userCliente.GetUserById(id) //comienza llamando a la función userCliente.GetUserById(id)
 	// para obtener el modelo model.User correspondiente al ID proporcionado.
-	var userDetailDto dto.UserDetailDto
+	var userDetailDto dto.UserDto
 
 	if user.Id == 0 { //si no enciuentra el usuario
 		return userDetailDto, e.NewBadRequestApiError("user not found")
 	}
+
+
 
 	/* si lo encuentra  se copian los datos relevantes del modelo User al userDetailDto.
 	Esto incluye el nombre, apellido, calle y número de la dirección del usuario. Además, se recorren los números
@@ -60,6 +62,17 @@ func (s *userService) GetUserById(id int) (dto.UserDetailDto, e.ApiError) {
 
 	userDetailDto.Name = user.Name
 	userDetailDto.LastName = user.LastName
+	userDetailDto.Email=user.Email
+	userDetailDto.Role=user.Role
+	userDetailDto.Id=user.Id
+	userDetailDto.Address = dto.AddressDto{
+			Id:      user.Address.Id,
+			UserId:  user.Address.UserId,
+			Street:  user.Address.Street,
+			Number:  user.Address.Number,
+			City:    user.Address.City,
+			Country: user.Address.Country,
+		}
 
 	/*
 		for _, telephone := range user.Telephones {

@@ -25,7 +25,7 @@ var ( //declaro estas varibles, db de tipo gorm.db y err de tipo error
 
 func init() { // init() que se ejecuta durante la inicialización del paquete.
 	// DB Connections Paramters, se establecen los aparametros de coneccion a la base de datos
-	DBName := "hotel_V2"
+	DBName := "Hotel"
 	DBUser := "root"
 	DBPass := ""
 	//DBPass := os.Getenv("MVC_DB_PASS")

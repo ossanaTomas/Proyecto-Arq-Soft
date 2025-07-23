@@ -19,7 +19,7 @@ var Db *gorm.DB
 
 func CheckAvailability(dtoConsulta dto.CheckAvailabilityDto) (dto.CheckAvailabilityDto, error) {
 	var hotel model.Hotel
-	fmt.Println("el id de hotel que llega:", dtoConsulta.HotelId)
+	
 
 	err := Db.First(&hotel, dtoConsulta.HotelId).Error
 	if err != nil {
@@ -34,7 +34,7 @@ func CheckAvailability(dtoConsulta dto.CheckAvailabilityDto) (dto.CheckAvailabil
 
 	err = row.Scan(&totalBookedRooms)
 	if err != nil {
-		fmt.Println("error al escanear:", err)
+	
 		return dtoConsulta, errors.New("error inesperado al consultar reservas")
 	}
 
@@ -84,7 +84,7 @@ err := row.Scan(&totalReservadas)
 		}
 	}
 	
-    fmt.Println(hotelesDisponibles)
+
 	return hotelesDisponibles, nil
 }
 
