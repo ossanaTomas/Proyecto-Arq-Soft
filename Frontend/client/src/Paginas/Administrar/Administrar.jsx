@@ -12,6 +12,7 @@ import CardUser from '../../Components/CardUser/CardUser';
 import Modal from "../../Components/Modal/Modal";
 import FormCreateAmeniti from '../../Components/AmenitiesGestion/FormCreateAmeniti';
 import Buscador from '../../Components/Buscador/Buscador';
+import InfoReservaCard from '../../Components/InfoReservaCard/InfoRerservaCard';
 
 async function getAmenities() {
     return await fetch('http://localhost:8090/amenities', {
@@ -54,6 +55,23 @@ async function getusers() {
     }).then(response => response.json());
 }
 
+async function getReservs() {
+    return await fetch("http://localhost:8090/reserv", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(response => response.json());
+}
+
+async function deleteReserv(id) {
+    const res = await fetch(`http://localhost:8090/reserv/${id}`, {
+        method: "DELETE"
+    });
+    return res.ok;
+}
+
+
 function AdminDashboard() {
     const [active, setActive] = useState({ section: 'Hoteles', action: 'Ver todos' });
     const [hotels, setHotels] = useState([]);
@@ -69,12 +87,19 @@ function AdminDashboard() {
     const [userToUpdateRole, setUserToUpdateRole] = useState(null);
     const [showRoleModal, setShowRoleModal] = useState(false);
 
+    const [reservs, setReservs] = useState([]);
+    const [selectReserv, setSelectReserv] = useState([]);
+    const [reservToDelete, setReservToDelete] = useState(null);
+    const [showDeleteReservModal, setShowDeleteReservModal] = useState(false);
+
     const [showModal, setShowModal] = useState(false);
     const [amenityToDelete, setAmenityToDelete] = useState(null);
     const [showSearchBar, setshowSearchBar] = useState(true);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
+
+
 
 
     useEffect(() => {
@@ -90,7 +115,7 @@ function AdminDashboard() {
 
 
     useEffect(() => {
-        if (active.section === 'Amenities' && active.action === 'Gestionar' ) {
+        if (active.section === 'Amenities' && active.action === 'Gestionar') {
             getAmenities().then(setAmenities);
         }
     }, [active]);
@@ -102,7 +127,13 @@ function AdminDashboard() {
     }, [active]);
 
     useEffect(() => {
-        if (selectedHotel || active.action === 'Agregar nuevo') {
+        if (active.section === 'Reservas' && active.action.includes('Ver')) {
+            getReservs().then(setReservs);
+        }
+    }, [active]);
+
+    useEffect(() => {
+        if (selectedHotel || active.action === 'Agregar nuevo' || active.action === "Ver reservas") {
             setshowSearchBar(false);
         } else {
             setshowSearchBar(true);
@@ -177,6 +208,15 @@ function AdminDashboard() {
                 if (sortOption === 'nombre_desc') return b.name.localeCompare(a.name);
                 return 0;
             });
+    }
+    if (active.section === 'Reservas' && active.action === 'Ver reservas') {
+        renderedData = [...reservs]
+        /* .filter(r => toLowerCase().includes(searchTerm.toLowerCase()))
+         .sort((a, b) => {
+             if (sortOption === 'nombre_asc') return a.name.localeCompare(b.name);
+             if (sortOption === 'nombre_desc') return b.name.localeCompare(a.name);
+             return 0;
+         });*/
     }
 
     return (
@@ -304,6 +344,22 @@ function AdminDashboard() {
                                 ))}
                             </div>
                         )}
+                        {active.section === "Reservas" && active.action === "Ver reservas" && Array.isArray(reservs) && (
+                            <div className={styles.hotelGrid}>
+                                {reservs.map((reserv) => (
+                                    <InfoReservaCard
+                                        key={reserv.id} // Asegúrate de que sea 'id', no 'Id' si estás usando camelCase
+                                        reserva={reserv}
+                                        moreInfo={selectReserv?.id === reserv.id}
+                                        onEdit={() => setSelectReserv(reserv)}
+                                        onDelete={() => {
+                                            setShowDeleteReservModal(true);
+                                            setReservToDelete(reserv);
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        )}
 
                         {showRoleModal && userToUpdateRole && (
                             <Modal
@@ -317,6 +373,28 @@ function AdminDashboard() {
                                 cancelText="Cancelar"
                             >
                                 Está cambiando el rol del usuario <strong>{userToUpdateRole.name}</strong>. ¿Desea continuar?
+                            </Modal>
+                        )}
+                        {showDeleteReservModal && reservToDelete && (
+                            <Modal
+                                title="Advertencia: Eliminara una reserva!!"
+                                onConfirm={async () => {
+                                    const success = await deleteReserv(reservToDelete.id);
+                                    if (success) {
+                                      
+                                        setReservs(prev => prev.filter(r => r.id !== reservToDelete.id));
+                                        setReservToDelete(null);
+                                        setShowDeleteReservModal(false);
+                                    }
+                                }}
+                                onCancel={() => {
+                                    setShowDeleteReservModal(false);
+                                    setReservToDelete(null);
+                                }}
+                                confirmText="Confirmar"
+                                cancelText="Cancelar"
+                            >
+                                Está a punto de eliminar la reserva <strong>¿Seguro desea continuar?</strong>. 
                             </Modal>
                         )}
                     </div>

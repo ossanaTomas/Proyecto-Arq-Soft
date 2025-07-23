@@ -56,10 +56,10 @@ function ConfirmReserva() {
           user_id: user.id,
           date_start: new Date(dateStart).toISOString(),
           date_finish: new Date(dateFinish).toISOString(),
-          hotel_rooms: reserva.personas
+          hotel_rooms: parseInt(reserva.personas, 10)
         }),
       });
-
+       console.log("cantidad de personas que mando")
       if (response.ok) {
         alert("Reserva confirmada exitosamente!");
         navigate("/");

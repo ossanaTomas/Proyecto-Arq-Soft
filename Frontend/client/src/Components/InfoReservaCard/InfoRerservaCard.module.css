@@ -1,0 +1,120 @@
+.cardContainer {
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  background-color: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cardContainer:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: scale(1.01);
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1rem;
+}
+
+.titulo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.subtitulo {
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.infoExtra {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.expandContent {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ecf0f1;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.columnas {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.columna {
+  flex: 1;
+  min-width: 260px;
+  font-size: 0.95rem;
+  color: #2d3436;
+}
+
+.columna h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  color: #0984e3;
+  border-bottom: 2px solid #dfe6e9;
+  padding-bottom: 0.3rem;
+}
+
+.columna p {
+  margin: 0.4rem 0;
+}
+
+.botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btnEditar {
+  background-color: #00b894;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btnEditar:hover {
+  background-color: #019875;
+}
+
+.btnEliminar {
+  background-color: #d63031;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btnEliminar:hover {
+  background-color: #c0392b;
+}

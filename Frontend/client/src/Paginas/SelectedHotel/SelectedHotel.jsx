@@ -26,7 +26,6 @@ function SelectedHotel() {
   const location = useLocation();
 
 
-
   const today = new Date().toISOString().split('T')[0];
 
 
@@ -37,7 +36,10 @@ function SelectedHotel() {
     if (storedHotel) {
       setHotel(JSON.parse(storedHotel));
     }
+    
   }, []);
+
+
 
   useEffect(() => {
     if (reservQuerry) {
@@ -46,8 +48,30 @@ function SelectedHotel() {
       setReservFinish(reservQuerry.date_finish);
       setReservPeople(persons);
       setReservAvaliable(reservQuerry.avaliable);
+
     }
   }, [reservQuerry]);
+
+
+
+  useEffect(() => {
+  const reservaGuardada = localStorage.getItem("reservaPendiente");
+  if (reservaGuardada) {
+    const reserva = JSON.parse(reservaGuardada);
+    console.log("Restaurando reserva desde localStorage", reserva);
+
+    setHotel(reserva.hotel);
+    setReservStart(reserva.dateStart);
+    setReservFinish(reserva.dateFinish);
+    setReservPeople(parseInt(reserva.personas, 10));
+    setReservAvaliable(true); 
+
+    // Si querés borrar la reserva desde este componente:
+    localStorage.removeItem("reservaPendiente");
+  }
+}, []);
+
+
 
   if (!hotel) return <div>Cargando hotel...</div>;
 
@@ -184,7 +208,15 @@ function SelectedHotel() {
                             }
                           });
                         } else {
-                          setShowModal(true);
+                          const reservaPendiente = {
+      hotel,
+      dateStart: reservStart,
+      dateFinish: reservFinish,
+      personas: reservPeople,
+    };
+    localStorage.setItem("reservaPendiente", JSON.stringify(reservaPendiente));
+//muestro modal 
+    setShowModal(true);
 
                         }
                       }}

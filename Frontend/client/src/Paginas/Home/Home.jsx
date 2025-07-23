@@ -59,8 +59,6 @@ const handleFiltrarHoteles=(hotels)=>{
     
     
 
-
-
     const renderAuthOptions = () => {
         if (user) {
          if(user.role=="admin"){
