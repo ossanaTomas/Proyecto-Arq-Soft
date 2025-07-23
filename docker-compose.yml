@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0  #se descarga la imagen de la base de datos de mysql  
+   # container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_DATABASE: hotel_V2
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - "3306:3306"
+    volumes: #que es volumenes
+      - db-data:/var/lib/mysql
+    networks:
+      - hotel-network
+
+  backend:
+    build:
+      context: ./backend  # Ruta al Dockerfile del backend
+    #container_name: hotel-backend
+    restart: always
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+    networks:
+      - hotel-network
+
+  frontend:
+    build:
+      context: ./frontend/client  # Ruta al Dockerfile del frontend
+    #container_name: hotel-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - hotel-network
+
+volumes:
+  db-data:
+
+networks:
+  hotel-network:

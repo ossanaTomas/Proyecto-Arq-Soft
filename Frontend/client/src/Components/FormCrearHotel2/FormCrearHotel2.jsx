@@ -51,9 +51,9 @@ function FormCrearHotel() {
             const newAmenity = await response.json();
             if (response.ok) {
                 setAmenities(prev => [...prev, newAmenity]);
-                setSelectedAmenities(prev => [...prev, newAmenity.id]);
                 setNewAmenityName('');
                 setNewAmenityDescription('');
+                setSelectedAmenities(prev => [...prev, newAmenity.id]);
                 setShowNewAmenityForm(false);
             } else {
                 alert("Error al agregar la amenity");
