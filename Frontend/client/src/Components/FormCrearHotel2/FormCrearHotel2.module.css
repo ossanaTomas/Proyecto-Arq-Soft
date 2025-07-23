@@ -2,13 +2,14 @@
 .form{
 
   margin-top: 2rem;
-  width: 100%;
+  width: 130%;
   max-width: 600px;
   padding: 2rem;
   background-color: #c8c9ca;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  margin-left:-20% ;
   gap: var(--padding-medium);
 }
 

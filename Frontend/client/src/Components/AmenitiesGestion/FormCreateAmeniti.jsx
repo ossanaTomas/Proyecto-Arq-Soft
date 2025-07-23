@@ -33,6 +33,7 @@ function FormCreateAmeniti({ onClose, onCreated }) {
 
   return (
     <div className={styles.newAmenityForm}>
+      <label className={styles.title}>Cree Nueva Amenity</label>
       <input
         type="text"
         placeholder="Nombre de nueva amenity"

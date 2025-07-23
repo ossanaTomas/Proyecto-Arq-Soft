@@ -58,6 +58,7 @@ const handleFiltrarHoteles=(hotels)=>{
 
     
     
+    
 
     const renderAuthOptions = () => {
         if (user) {
@@ -66,6 +67,7 @@ const handleFiltrarHoteles=(hotels)=>{
             <>
                 <Bot BotText={`Hola ${user.name}`}/>
                 <Bot BotText={"Administrar"}  navegar={'/hoteles/insertar'}/>
+                 <Bot BotText={"Mis Reservas"} navegar={'/my/reservas'} />
                 <Bot BotText={"Cerrar sesión"}  onClick={logout}/>
             </>
           )
@@ -76,6 +78,7 @@ const handleFiltrarHoteles=(hotels)=>{
                 <>
                 <Bot BotText={`Hola ${user.name}`}/>
                 <Bot BotText={"Cerrar sesión"}  onClick={logout}/>
+                 <Bot BotText={"Mis Reservas"} navegar={'/my/reservas'} />
                 </>
             );  
         }
@@ -94,10 +97,10 @@ const handleFiltrarHoteles=(hotels)=>{
           </MenuBar>
     
           <div className={styles.main}>
-            <h2 className={styles.titulo}>Nuestros Hoteles</h2>
+           
 
           <FiltroHotels onFiltrar={handleFiltrarHoteles} />
-
+           <h2 className={styles.titulo}>Hoteles Disponibles:</h2>
             <div className={styles.cardGrid}>
           <div className={styles.cardGrid2} >
         

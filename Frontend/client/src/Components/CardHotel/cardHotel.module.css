@@ -31,8 +31,8 @@
 }
 
 .hotelName {
-  font-size: 20px;
-  color: #000000;  /*#0984bd;*/
+  font-size: 180%;
+  color:  #2c3e50;   /*#0984bd;*/
   margin: 0 0 8px 0;
 }
 
@@ -54,8 +54,9 @@
 }
 
 .amenity {
-  background-color: #929292;
+  background-color: #a8a7a7;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
 }
+

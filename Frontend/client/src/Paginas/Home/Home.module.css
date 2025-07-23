@@ -14,8 +14,11 @@
     box-shadow: var(--box-shadow);
   }
 
+  .titulo{
+    margin-left: 5%;
+  }
   .cardGrid{
-    margin-top: 8%;
+    margin-top: 2%;
   }
 
  

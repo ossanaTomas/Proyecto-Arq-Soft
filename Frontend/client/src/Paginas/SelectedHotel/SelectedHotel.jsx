@@ -92,9 +92,9 @@ function SelectedHotel() {
       return;
     }
 
-    const isoDateStart = new Date(dateStart).toISOString(); // Ej: "2025-07-22T00:00:00.000Z"
-    const isoDateFinish = new Date(dateFinish).toISOString();
-
+   const isoDateStart = new Date(`${dateStart}T00:00:00`).toISOString();
+const isoDateFinish = new Date(`${dateFinish}T00:00:00`).toISOString();
+    
     try {
       const response = await fetch('http://localhost:8090/reserv/check', {
         method: 'POST',
@@ -124,15 +124,15 @@ function SelectedHotel() {
     <div className={styles.selectedhotelcontainer}>
       <MenuBar />
       <div className={styles.selectedhotelcontent}>
-        <div className={styles.hotelinfosection}>
-          <h1 className={styles.hoteltitle}>{name}</h1>
-        </div>
+     
 
         <div className={styles.hotelimagesection}>
           <img className={styles.hotelimage} src={imagenUrl} alt={`Imagen de ${name}`} />
         </div>
-
-        <div className={styles.hotelinfosection}>
+   <div className={styles.hotelinfosection}>
+          <h1 className={styles.hoteltitle}>{name}</h1>
+        
+       
           <p className={styles.hoteldescription}>{description}</p>
 
           {Array.isArray(amenities) && amenities.length > 0 && (
@@ -223,7 +223,7 @@ function SelectedHotel() {
                     />
                   </div>
                 ) : (
-                  <div style={{ color: 'red' }}>No disponible :(</div>
+                  <div className={styles.diponibilidadNo}>No se cuenta con disponibiliad en esas fechas.... :(,  proba otros hoteles o Fechas  :)</div>
                 )}
               </div>
             )}

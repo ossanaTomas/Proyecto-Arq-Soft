@@ -44,13 +44,13 @@ const AdminSidebar = ({ onSelect }) => {
 
       <SidebarSection
         title="Reservas"
-        items={['Ver reservas', 'Estadísticas']}
+        items={['Ver reservas', 'Estadísticas-(Proximante)']}
         onSelect={onSelect}
       />
 
       <SidebarSection
         title="Usuarios"
-        items={['Ver todos', 'Cambiar roles']}
+        items={['Ver todos']}
         onSelect={onSelect}
       />
     </div>

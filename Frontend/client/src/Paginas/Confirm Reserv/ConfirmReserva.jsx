@@ -38,8 +38,7 @@ function ConfirmReserva() {
     return <div>Error: Información de reserva o usuario no disponible.</div>;
   }
 
- 
-  
+
    
   const { hotel, dateStart, dateFinish, personas } = reserva;
   const dias = calcularDias(dateStart, dateFinish);

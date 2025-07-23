@@ -4,6 +4,10 @@
     "@material-tailwind/react": "^2.1.10",
     "@testing-library/react": "^16.2.0",
     "axios": "^1.9.0",
+    "framer-motion": "^10.18.0",
     "react-router-dom": "^7.2.0"
+  },
+  "overrides": {
+    "framer-motion": "^10.18.0"
   }
 }

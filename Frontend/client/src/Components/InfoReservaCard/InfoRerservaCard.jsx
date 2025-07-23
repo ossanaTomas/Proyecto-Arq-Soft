@@ -86,7 +86,7 @@ function InfoReservaCard({ reserva, onEdit, onDelete }) {
           </div>
 
           <div className={styles.botones}>
-            <button className={styles.btnEditar} onClick={() => onEdit(reserva)}>Editar</button>
+          {/*  <button className={styles.btnEditar} onClick={() => onEdit(reserva)}>Editar</button>*/}
             <button className={styles.btnEliminar} onClick={() => onDelete(reserva)}>Eliminar</button>
           </div>
         </div>
