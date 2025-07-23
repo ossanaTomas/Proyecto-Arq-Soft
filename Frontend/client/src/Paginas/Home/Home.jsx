@@ -5,6 +5,8 @@ import Bot from '../../Components/Boton/Boton';
 import MenuBar from '../../Components/MenuBar/MenuBar';
 import styles from './Home.module.css';
 import CardHotel from '../../Components/CardHotel/CardHotel';
+import FiltroHotels from '../../Components/FilterHotels/FilterHotels';
+
 import { useFetch } from '../../Components/usefetche';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,27 +24,43 @@ async function gethotels() {
 
 
 
-
 function Home() {
     const { user, logout } = useContext(AuthContext);
+
     const[hotels,setHotels]=useState([]);
+    const [renderedData, setRenderedData] = useState([]);
+
 
        const navigate = useNavigate();
 
     const[selectHotel, setSelectedHotel]=useState(); 
-  
 
-    useEffect(()=>{
-      gethotels().then(setHotels); 
-    },[]);
+
+useEffect(() => {
+  gethotels().then(data => {
+    setHotels(data);
+    setRenderedData(data);  // actualizás el estado después de obtener los hoteles
+  });
+}, []);
+    
+ 
+
+const handleFiltrarHoteles=(hotels)=>{
+     setRenderedData(hotels)
+}
+
 
     const handleHotelClick=(hotel)=>{
-      setSelectedHotel(hotel)
-      navigate('/')
+      console.log("Este es el nombte", hotel)
+      localStorage.setItem("selectedHotel", JSON.stringify(hotel));
+      navigate('/hotel/reservar')
     }
 
-    console.log(hotels) 
     
+    
+
+
+
     const renderAuthOptions = () => {
         if (user) {
          if(user.role=="admin"){
@@ -79,15 +97,16 @@ function Home() {
     
           <div className={styles.main}>
             <h2 className={styles.titulo}>Nuestros Hoteles</h2>
+
+          <FiltroHotels onFiltrar={handleFiltrarHoteles} />
+
             <div className={styles.cardGrid}>
           <div className={styles.cardGrid2} >
         
-           { hotels.map((hotel) => (
-  
-         <CardHotel hotel={hotel}
-          onClick={() => handleHotelClick(hotel)}/>
-        ))}
-      
+          {renderedData.map((hotel) => (
+  <CardHotel key={hotel.id} hotel={hotel} onClick={() => handleHotelClick(hotel)} />
+))}
+    
           </div>
             </div>
           </div>

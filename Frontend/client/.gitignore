@@ -3,6 +3,8 @@
 # dependencies
 /frontend/node_modules/
 
+/DockerFile
+
 /.pnp
 .pnp.js
 

@@ -90,7 +90,7 @@ const HotelDetails = ({ hotel, onBack }) => {
     });
 
     const data = await res.json();
-    return data.url; // ejemplo: "/uploads/img/hotels/xyz.jpg"
+    return data.url; 
   };
 
 

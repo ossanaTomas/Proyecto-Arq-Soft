@@ -13,7 +13,7 @@ import Modal from "../../Components/Modal/Modal";
 import FormCreateAmeniti from '../../Components/AmenitiesGestion/FormCreateAmeniti';
 import Buscador from '../../Components/Buscador/Buscador';
 
-async function getamenities() {
+async function getAmenities() {
     return await fetch('http://localhost:8090/amenities', {
         method: "GET",
         headers: { "Content-Type": "application/json" }
@@ -83,9 +83,15 @@ function AdminDashboard() {
         }
     }, [active]);
 
+    // este solo para vizualizar 
     useEffect(() => {
-        if (active.section === 'Amenities' && active.action === 'Gestionar') {
-            getamenities().then(setAmenities);
+        console.log(selectedAmenities)
+    }, [selectedAmenities]);
+
+
+    useEffect(() => {
+        if (active.section === 'Amenities' && active.action === 'Gestionar' ) {
+            getAmenities().then(setAmenities);
         }
     }, [active]);
 
@@ -276,6 +282,8 @@ function AdminDashboard() {
                                 onCreated={(newAmenity) => {
                                     setAmenities(prev => [...prev, newAmenity]);
                                     setShowNewAmeniti(false);
+                                    getAmenities().then(setAmenities);
+
                                 }}
                             />
                         )}

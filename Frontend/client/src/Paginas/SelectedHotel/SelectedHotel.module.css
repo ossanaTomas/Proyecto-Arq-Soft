@@ -1,0 +1,170 @@
+/* SelectedHotel.css */
+
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #2980b9;
+  --background-color: #f4f4f4;
+  --white: #fff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --padding: 2%;
+  --spacing: 16px;
+  --font-title: 1.8rem;
+  --font-subtitle: 1.3rem;
+  --font-body: 1rem;
+ 
+}
+
+.selectedhotelcontainer {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  min-height: 100vh;
+  
+}
+
+.selectedhotelcontent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+  max-width: 960px;
+  margin-left: 8%;
+
+  padding: var(--padding);
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-top: 1%;
+
+}
+
+.hotelimagesection {
+  width: 70%;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.hotelimage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.hotelinfosection {
+  padding: var(--spacing);
+  background-color: #d1d1d1;
+}
+
+.hoteltitle {
+  font-size: var(--font-title);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing);
+}
+
+.hoteldescription {
+  font-size: var(--font-body);
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: var(--spacing);
+}
+
+.hotelamenities {
+  margin-top: var(--spacing);
+}
+
+.hotelamenities h2 {
+  font-size: var(--font-subtitle);
+  color: var(--accent-color);
+  margin-bottom: 8px;
+}
+
+.amenitieslist {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.amenityitem {
+  background-color: #d1d1d1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  transition: background 0.2s ease;
+}
+
+.amenityitem:hover {
+  background-color: #d0e6f7;
+}
+
+
+/*De el buscador de disponibilidad:*/
+
+.searchdisponibilidad{
+  margin-top: 3%;
+}
+
+
+.filtroForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  border-radius: 10px;
+  background-color:  rgb(232, 232, 233);
+ 
+}
+
+.filtroForm label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 1%; 
+}
+
+.filtroForm input {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filtroForm button {
+  background-color: #1d4ed8;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.filtroForm button:hover {
+  background-color: #1d4fd8cb;
+}
+
+
+.diponibilidadtitle {
+  padding-top: 4%;
+  font-size: var(--font-subtitle);
+   font-weight: bold;
+  color: black;
+  margin-bottom: var(--spacing);
+}
+
+/*de tarketa de reservar*/
+.diponibilidSi{
+  padding-top: 4%;
+  font-size:  --font-body;
+   font-weight: bold; 
+  color: black;
+  margin-bottom: var(--spacing);
+}
+
+.resultado{
+  margin-left: 30%;
+   display: flex;
+  flex-wrap: wrap;
+}

@@ -3,14 +3,19 @@ import { useState,useContext} from 'react';
 import { AuthContext } from "../../Context/AuthContext";
 import styles from "./FormLogin.module.css"
 import { useNavigate } from 'react-router-dom'; 
+import { useLocation } from "react-router-dom";
 
 
 const FormLogin=()=>{
     const [email, setEmail] =  useState('');
     const [password,setPassword] = useState(''); 
     const {login}=useContext(AuthContext); 
-    const navigate = useNavigate()
-  
+    const navigate = useNavigate(); 
+    const location=useLocation();  //accedo al estado que se pasa con navigate
+
+    const from = location.state?.from?.pathname || '/'  
+    const reserva= location.state?.reserva; 
+
     const Submit = async (e) => {
         e.preventDefault();
 
@@ -34,7 +39,8 @@ const FormLogin=()=>{
             if (response.ok) {
                 login({id:data.id,name:data.name,role:data.role},data.token);
                 alert(`Inicio Exitoso! Bienvenido ${data.name}!`);
-                navigate('/'); 
+
+                navigate(from, reserva, {replace:true}); 
             } else {
                 alert(`Error: ${data.message}`);
             }
