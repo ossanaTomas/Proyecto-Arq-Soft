@@ -3,8 +3,8 @@ package dto
 import "time"
 
 type ReservDto struct {
-	Id         int      `json:"id"`
-	UserId     int       `json:"user_id"`
+	Id         int        `json:"id"`
+	UserId     int        `json:"user_id"`
 	User       string     `json:"user_name"`
 	HotelId    int        `json:"hotel_id"`
 	Hotel      string     `json:"hotel_name"`

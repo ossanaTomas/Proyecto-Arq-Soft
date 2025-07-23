@@ -27,6 +27,7 @@ type reservServiceInterface interface {
 	DeleteReserv(id int)(e.ApiError)
 	UpdateReserv(id int, reservDto dto.ReservDto) (dto.ReservDto, e.ApiError)
 	GetReservById(id int) (dto.ReservDto, e.ApiError)
+	GetFutureReservsByUser(userId int) (dto.ReservsDto, e.ApiError)
 	GetAllReservByHotel(id int )(dto.ReservsDto,e.ApiError)
 	SearchAvaliabity( searchAvaliabity dto.RequesthHotelsAvaibylityDto)(dto.ResponseHotelsAvaibylityDtos, e.ApiError)
 	
@@ -68,6 +69,7 @@ func (s *reservService)GetReservs()(dto.ReservsDto, e.ApiError){
 
 	for _ ,reserv := range reservsModel{
       var reservDto dto.ReservDto
+	  reservDto.Id=reserv.Id
       reservDto.UserId = reserv.UserId
 	  reservDto.HotelId= reserv.HotelId
 	  reservDto.DateStart=reserv.DateStart
@@ -105,6 +107,34 @@ func (s *reservService)GetAllReservByHotel(id int )(dto.ReservsDto,e.ApiError){
 	}
 	return ReservsDto , nil
 }
+
+
+
+func (s *reservService) GetFutureReservsByUser(userId int) (dto.ReservsDto, e.ApiError) {
+	var reservsModel model.Reservs
+	var reservsDto dto.ReservsDto
+
+	reservsModel, err := reservCliente.GetFuturesReservsByUser(userId)
+	if err != nil {
+		return reservsDto, e.NewBadRequestApiError(err.Error())
+	}
+
+	for _, reserv := range reservsModel {
+		var r dto.ReservDto
+		r.Id = reserv.Id
+		r.UserId = reserv.UserId
+		r.HotelId = reserv.HotelId
+		r.DateStart = reserv.DateStart
+		r.DateFinish = reserv.DateFinish
+		r.DateActual = reserv.CreatedAt
+		r.HotelRooms = reserv.HotelRooms
+		r.TotalPrice = reserv.TotalPrice
+		reservsDto = append(reservsDto, r)
+	}
+
+	return reservsDto, nil
+}
+
 
 
 func (s *reservService)	InsertRerserv(reservDto dto.ReservDto)(dto.ReservDto, e.ApiError){
@@ -224,7 +254,7 @@ func (s *reservService) GetReservById(id int) (dto.ReservDto, e.ApiError) {
 	if err != nil {
 		return reservDto, e.NewNotFoundApiError("Reserva no encontrada")
 	}
-
+    reservDto.Id=reservModel.Id
 	reservDto.UserId = reservModel.UserId
 	reservDto.HotelId = reservModel.HotelId
 	reservDto.DateStart = reservModel.DateStart

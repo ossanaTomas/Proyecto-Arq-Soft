@@ -31,6 +31,7 @@ func mapUrls() {
 
 	//Hotels:
 	router.GET("/hotels",hotelController.GetHotels)
+	router.GET("/hotel/:id",hotelController.GetHotel)
 	router.POST("/hotels",hotelController.InsertHotel)
 	router.PUT("/hotels/:id",hotelController.UpdateHotel)
     router.DELETE("/hotels/:id", hotelController.DeleteHotel)
@@ -52,6 +53,9 @@ func mapUrls() {
     router.PUT("/reserv/:id", reservController.UpdateReserv)
 	router.GET("/reserv",reservController.GetReservs)
 	router.GET("/reserv/disponibility", reservController.SearchAvaliabity)
+	router.GET("/reserv/future/:id", reservController.GetFutureReservsByUser)
+
+	//router.GET("/reserv/user/hotels", reservController.GetAllDetails)
 
 
 	//Mediante llamadas a métodos como router.GET(), router.POST(), etc.,

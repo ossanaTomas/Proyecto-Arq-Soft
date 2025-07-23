@@ -29,7 +29,7 @@ func GetHotels() model.Hotels {
 func GetHotelById(id int) (model.Hotel, error) {
 	var hotel model.Hotel //declaro varibale user del tipo model.user
 
-	result := Db.Where("id = ?", id).First(&hotel)
+	result := Db.Where("id = ?", id).Preload("Amenities").Preload("Imagenes").First(&hotel)
 	if result.Error != nil {
 		return model.Hotel{}, errors.New("id inexistente")
 	}

@@ -5,7 +5,7 @@ import (
 	"backend/dto"
 	"backend/model" //importo del model
 	"fmt"
-
+ "time"
 	"errors"
 	//"strings"
 	//e "backend/utils/errors"
@@ -118,15 +118,19 @@ func GetAllReservsByUser(id int)(model.Reservs,error){
 	return reservs,nil
 }
 
-func GetFuturesReservsByUser(id int)(model.Reservs,error){
-	var reservs model.Reservs
-	result:=Db.Where("user_id= ?", id).Find(&reservs)
-	if result.Error!=nil{
-		return reservs, errors.New("error al encontrar las reservas de este usuario")
-	}
-	return reservs,nil
-}
 
+
+func GetFuturesReservsByUser(userId int) (model.Reservs, error) {
+	var reservs model.Reservs
+	now := time.Now()
+
+	result := Db.Where("user_id = ? AND date_finish >= ?", userId, now).Find(&reservs)
+	if result.Error != nil {
+		return reservs, errors.New("error al encontrar las reservas futuras del usuario")
+	}
+
+	return reservs, nil
+}
 
 
 func GetReservs()(model.Reservs,error){

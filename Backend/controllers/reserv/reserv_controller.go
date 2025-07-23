@@ -115,6 +115,25 @@ func GetReservs(c *gin.Context){
 }
 
 
+func GetFutureReservsByUser(c *gin.Context) {
+	idParam := c.Param("id")
+	userId, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
+	reservs, apiErr := service.ReservService.GetFutureReservsByUser(userId)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, reservs)
+}
+
+
+
 func GetReservById(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)

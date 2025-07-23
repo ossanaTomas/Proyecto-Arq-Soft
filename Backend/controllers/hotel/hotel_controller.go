@@ -2,18 +2,16 @@ package hotelControler
 
 import (
 	"backend/dto"
-    service "backend/services"
-	"net/http"
+	service "backend/services"
 	"fmt"
-	"time"
-	 "strconv"
 	"github.com/gin-gonic/gin"
-    log "github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
+	"net/http"
+	"strconv"
+	"time"
 )
 
-
-
-func GetHotels(c *gin.Context) { 
+func GetHotels(c *gin.Context) {
 
 	var hotelsDto dto.HotelsResponseDto
 	hotelsDto, err := service.HotelService.GetHotels()
@@ -25,53 +23,65 @@ func GetHotels(c *gin.Context) {
 	c.JSON(http.StatusOK, hotelsDto)
 }
 
+func GetHotel(c *gin.Context) {
+	idParam, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	var hotelDto dto.HotelResponseDto
+	hotelDto, er := service.HotelService.GetHotel(idParam)
 
+	if er != nil {
+		c.JSON(http.StatusBadRequest, er.Error())
+		return
+	}
+	c.JSON(http.StatusOK, hotelDto)
+}
 
-func InsertHotel(c *gin.Context){
-    
+func InsertHotel(c *gin.Context) {
+
 	var hotelDto dto.HotelDto
-	err := c.BindJSON(&hotelDto) 
-	
+	err := c.BindJSON(&hotelDto)
+
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-  
-	hotelDto,er := service.HotelService.InsertHotel(hotelDto)
+
+	hotelDto, er := service.HotelService.InsertHotel(hotelDto)
 
 	if er != nil {
 		c.JSON(er.Status(), er)
 		return
 	}
-	
+
 	c.JSON(http.StatusCreated, hotelDto)
 
 }
 
-
-func UpdateHotel(c *gin.Context){
+func UpdateHotel(c *gin.Context) {
 	idParam, _ := strconv.Atoi(c.Param("id"))
 	var hotelDto dto.HotelDto
 
 	err := c.BindJSON(&hotelDto)
-		if err != nil {
+	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-     
-	hotelDto.Id=idParam
+
+	hotelDto.Id = idParam
 	hotelDto, er := service.HotelService.UpdateHotel(hotelDto)
 
-		if er != nil {
+	if er != nil {
 		c.JSON(er.Status(), er)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, hotelDto)
 }
-
 
 func DeleteHotel(c *gin.Context) {
 	idParamStr := c.Param("id")
@@ -87,7 +97,6 @@ func DeleteHotel(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "hotel eliminado exitosamente"})
 }
-
 
 func UploadImage(c *gin.Context) {
 	file, err := c.FormFile("image")
@@ -106,7 +115,3 @@ func UploadImage(c *gin.Context) {
 	// Devolvés la URL relativa (que se guarda en el backend)
 	c.JSON(http.StatusOK, gin.H{"url": "/" + filename})
 }
-
-
-
-

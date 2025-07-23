@@ -16,6 +16,7 @@ import (
 type hotelService struct{}
 
 type hotelServiceInterface interface {
+	GetHotel(id int) (dto.HotelResponseDto, e.ApiError)
 	GetHotels() (dto.HotelsResponseDto, e.ApiError)
 	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
 	UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
@@ -65,6 +66,51 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	hotelDto.Id = savedHotel.Id
 	return hotelDto, nil
 }
+
+
+func (s *hotelService) GetHotel(id int ) (dto.HotelResponseDto, e.ApiError) {
+	
+	hotel, err := hotelCliente.GetHotelById(id)
+	if err!=nil{
+		return dto.HotelResponseDto{}, e.NewBadRequestApiError(err.Error())
+	}
+
+	//var hotelsDto dto.HotelsResponseDto
+
+		var hotelDto dto.HotelResponseDto
+		hotelDto.Id = hotel.Id
+		hotelDto.Name = hotel.Name
+		hotelDto.Description=hotel.Description
+		hotelDto.Rooms = hotel.Rooms
+
+
+		var amenityDtos []dto.AmenitiDto
+		for _, amenity := range hotel.Amenities {
+			amenityDto := dto.AmenitiDto{
+				Id: amenity.Id,
+				Name:        amenity.Name,
+				Description: amenity.Description,
+			}
+			amenityDtos = append(amenityDtos, amenityDto)
+		}
+		var imagenesDto []dto.ImagenDto
+		for _, imagen := range hotel.Imagenes {
+			imagenDto := dto.ImagenDto{
+				Url: imagen.Url,
+				Id:  imagen.Id,
+			}
+			imagenesDto = append(imagenesDto, imagenDto)
+		}
+
+		hotelDto.Imagenes = imagenesDto
+		hotelDto.Amenities = amenityDtos
+
+	
+	
+	return hotelDto, nil
+}
+
+
 
 
 func (s *hotelService) GetHotels() (dto.HotelsResponseDto, e.ApiError) {
