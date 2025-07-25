@@ -5,7 +5,7 @@ import styles from "./cardHotel.module.css";
 
 function CardHotel({ hotel ,onClick}) {
 
-const { name, description, rooms, imagenes, amenities } = hotel;
+const { name, description, imagenes, amenities } = hotel;
 
 const BASE_URL = "http://localhost:8090";
 const imagenUrl =
@@ -13,7 +13,7 @@ const imagenUrl =
       ? `${BASE_URL}${imagenes[0].url}` //si tiene imagen muestro la primera que este tiene
       : "/hotel_default.webp"; //si no cuenta con ninguna imagen muestro lo que es una imagen default
 
-      {console.log("url:",imagenUrl)}
+     
 
 const truncateWords = (text, limit) => {
   const words = text.split(" ");

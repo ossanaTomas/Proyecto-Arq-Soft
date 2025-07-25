@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './Administrar.module.css';
 
 import MenuBar from "../../Components/MenuBar/MenuBar";
-import Bot from '../../Components/Boton/Boton';
+
 import FormCrearHotel from "../../Components/FormCrearHotel2/FormCrearHotel2"
 import AdminSidebar from '../../Components/Slidebar/slidebar'
 import CardHotel from '../../Components/CardHotel/CardHotel';

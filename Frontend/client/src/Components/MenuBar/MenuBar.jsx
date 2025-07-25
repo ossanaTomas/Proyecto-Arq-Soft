@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { AuthContext } from '../../Context/AuthContext';
+
 import styles from './MenuBar.module.css'
 
 function MenuBar({ children }) {
-    const { user, logout } = useContext(AuthContext);
+   
 
     return (
         <header className={styles.header}>

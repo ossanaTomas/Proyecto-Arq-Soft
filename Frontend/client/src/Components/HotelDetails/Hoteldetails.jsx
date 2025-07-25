@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Hoteldetails.module.css';
 
-import Bot from '../../Components/Boton/Boton';
+
 
 const getAmenities = async () => {
   return await fetch('http://localhost:8090/amenities', {

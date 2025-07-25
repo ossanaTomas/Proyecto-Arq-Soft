@@ -1,7 +1,7 @@
 
 //import './Styles/App.css';
 //import './Styles/formLogin.css';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from "./Paginas/Home/Home.jsx"
 import Login from './Paginas/Login/Login.jsx';
 import Register from './Paginas/Register/Register.jsx'

@@ -26,7 +26,7 @@ function FormCrearHotel() {
         getamenities().then(setAmenities);
     }, []);
 
-    //Toggle de selección: selecciona o deselecciona
+    //Toggle de selección 
     const toggleAmenity = (id) => {
         setSelectedAmenities(prev =>
             prev.includes(id) ? prev.filter(aid => aid !== id) : [...prev, id]
@@ -35,6 +35,7 @@ function FormCrearHotel() {
 
 
     // Agregar nueva amenity al backend
+    //aca corregir la carga , se 
     const addNewAmenity = async () => {
         if (!newAmenityName.trim()) return alert("El nombre es obligatorio");
 
@@ -53,7 +54,7 @@ function FormCrearHotel() {
                 setAmenities(prev => [...prev, newAmenity]);
                 setNewAmenityName('');
                 setNewAmenityDescription('');
-                setSelectedAmenities(prev => [...prev, newAmenity.id]);
+                setSelectedAmenities(prev => [...prev, newAmenity.Id]);
                 setShowNewAmenityForm(false);
             } else {
                 alert("Error al agregar la amenity");
@@ -144,7 +145,7 @@ const resetForm = () => {
                      {/* input para imagen */}
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className={styles.input} />
 
-                    {/* Matriz de opciones */}
+                  
                     <div className={styles.amenitiesGrid}>
                         {amenities.map(amenity => (
                             <div

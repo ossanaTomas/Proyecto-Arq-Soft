@@ -11,6 +11,17 @@ import { useFetch } from '../../Components/usefetche';
 import { useNavigate } from 'react-router-dom';
 
 
+/*const API_URL = 'http://192.168.0.60:8090'; // ¡Usar la IP de tu red!
+// ...
+async function gethotels() {
+  return await fetch(`${API_URL}/hotels`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then(response => response.json());
+}
+ */
 
 async function gethotels() {
   return await fetch('http://localhost:8090/hotels', {
@@ -62,7 +73,7 @@ const handleFiltrarHoteles=(hotels)=>{
 
     const renderAuthOptions = () => {
         if (user) {
-         if(user.role=="admin"){
+         if(user.role==="admin"){
           return(
             <>
                 <Bot BotText={`Hola ${user.name}`}/>
