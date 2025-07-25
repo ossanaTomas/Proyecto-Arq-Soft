@@ -2,49 +2,38 @@ version: '3.8'
 
 services:
 
-  db:
-    image: mysql:8.0  #se descarga la imagen de la base de datos de mysql  
-   # container_name: mysql-db
-    restart: always
+  database:
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_DATABASE: hotel_V2
-      MYSQL_USER: root
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: hotel
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
     ports:
       - "3306:3306"
     volumes: #que es volumenes
-      - db-data:/var/lib/mysql
-    networks:
-      - hotel-network
-
+      - ./db:/docker-entrypoint-initdb.d
+    healthcheck:
+       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+       interval: 20s
+       timeout: 20s
+       retries: 30
+       start_period: 180s 
   backend:
-    build:
-      context: ./backend  # Ruta al Dockerfile del backend
+    build: ./backend  # Ruta al Dockerfile del backend
     #container_name: hotel-backend
-    restart: always
     ports:
       - "8090:8090"
     depends_on:
-      - db
+       database:
+        condition: service_healthy
     environment:
-      - DB_HOST=db
-    networks:
-      - hotel-network
+      - DB_HOST=database
 
   frontend:
-    build:
-      context: ./frontend/client  # Ruta al Dockerfile del frontend
-    #container_name: hotel-frontend
-    ports:
-      - "3000:3000"
+    build: ./frontend/client  # Ruta al Dockerfile del frontend
+    #container_name: hotel-frontend  
     depends_on:
       - backend
-    networks:
-      - hotel-network
-
-volumes:
-  db-data:
-
-networks:
-  hotel-network:
+    ports:
+      - "3000:3000"
+  
