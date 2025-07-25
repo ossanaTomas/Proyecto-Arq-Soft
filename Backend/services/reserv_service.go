@@ -284,7 +284,9 @@ func (s *reservService) SearchAvaliabity(searchAvaliabity dto.RequesthHotelsAvai
    //consulto los datos de los hoteles correspondientes a dichos IDs:
 
    hotels,err := hotelCliente.GetHotelsById(ids)
-
+  if(err!=nil){
+	return responseHotels,e.NewNotFoundApiError("error en la busqueda de hoteles")
+  }
    
    for _, hotel := range hotels {
 		var resposeHotel dto.ResponseHotelAvaibylityDto

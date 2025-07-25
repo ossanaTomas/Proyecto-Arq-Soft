@@ -53,7 +53,7 @@ func StartRoute() { // funcion llamada desde el main
 	mapUrls()
 
 	log.Info("Starting server") //registra un mensaje que indica que el servidor esta iniciado
-	router.Run(":8090")         //inicia el servidor en el puerto 8090 y comineza a escuchar spolicitudes entrantes
+	router.Run("0.0.0.0:8090")        //inicia el servidor en el puerto 8090 y comineza a escuchar spolicitudes entrantes
 
 }
 
