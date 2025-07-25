@@ -27,7 +27,7 @@ Esto facilita el mantenimiento, pruebas y escalabilidad de la aplicación.
 
 
 
-###  Estructura del Proyecto
+### Estructura del Proyecto
 
 ```plaintext
 ├── backend/
